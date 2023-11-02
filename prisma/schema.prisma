@@ -58,7 +58,7 @@ model User {
   bannerImage  String?
   bio          String?
   createdAt    DateTime       @default(now())
-  email        String
+  email        String         @unique
   following    Int            @default(0)
   followers    Int            @default(0)
   headerTitle  String
@@ -68,7 +68,7 @@ model User {
   posts        Post[]
   password     String
   photo        String
-  username     String
+  username     String         @unique
 }
 
 model Post {
