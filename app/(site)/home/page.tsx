@@ -4,7 +4,7 @@ import RightSideBar from "@/app/components/RightSideBar";
 
 export default function Home() {
   return (
-    <main className="w-full grid grid-cols-6 min-h-screen">
+    <main className="page">
       <LeftSideBar />
       <Feed />
       <RightSideBar />

@@ -31,7 +31,7 @@ export async function POST(req: Request) {
 
     if (!validPassword)
       throw new Error(
-        "Password must be stronger, 1 uppercase,symbol and 8 characters"
+        "Password must have one uppercase,symbol and minimum of 8 characters"
       );
 
     //hash password

@@ -55,7 +55,9 @@ export default function SignIn() {
             </button>
           </form>
           <BsTwitter className="text-2xl text-sky-700 text-center" />
-          <h1 className="font-extrabold text-xl mt-3">Sign in your account</h1>
+          <h1 className="font-extrabold text-xl mt-3 text-center w-full">
+            Sign in your account
+          </h1>
           <div className="py-4 w-full flex flex-col items-center justify-center gap-3">
             <div className="form-control w-full max-w-sm">
               <label htmlFor="sign_in_email" className="label">

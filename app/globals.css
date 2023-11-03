@@ -16,3 +16,8 @@ html,
 body {
   height:100%;
 }
+
+
+.page {
+  @apply w-full grid grid-cols-6 min-h-screen;
+}

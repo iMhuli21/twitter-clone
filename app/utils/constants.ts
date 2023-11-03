@@ -68,3 +68,25 @@ export interface ISession {
   };
   expires: ISODateString;
 }
+
+export interface IUser {
+  id: string;
+  bannerImage: string | null;
+  bio: string | null;
+  createdAt: Date;
+  email: string;
+  following: number;
+  followers: number;
+  headerTitle: string;
+  password: string;
+  photo: string;
+  username: string;
+}
+
+export interface IAccountProps {
+  data: IUser;
+}
+export enum Status {
+  seen = "seen",
+  unseen = "unseen",
+}
