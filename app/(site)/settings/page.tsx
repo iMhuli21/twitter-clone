@@ -6,7 +6,13 @@ import { redirect } from "next/navigation";
 import prisma from "@/app/utils/Db";
 import { ISession } from "@/app/utils/constants";
 
-export default async function Settings() {
+interface ISettingsProps {
+  searchParams: {
+    view: string | undefined;
+  };
+}
+
+export default async function Settings({ searchParams }: ISettingsProps) {
   const session = await getServerSession(authOptions);
 
   if (!session?.user) {
@@ -24,7 +30,7 @@ export default async function Settings() {
   return (
     <main className="page">
       <LeftSideBar />
-      <Account data={user} />
+      <Account data={user} view={searchParams.view} />
     </main>
   );
 }

@@ -1,0 +1,24 @@
+import LeftSideBar from "@/app/components/LeftSideBar";
+import ProfileInfo from "@/app/components/ProfileInfo";
+import RightSideBar from "@/app/components/RightSideBar";
+import { authOptions } from "@/app/utils/Auth";
+import prisma from "@/app/utils/Db";
+import { ISession } from "@/app/utils/constants";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+
+interface ProfileProps {
+  params: {
+    username: string;
+  };
+}
+
+export default async function Profile({ params }: ProfileProps) {
+  return (
+    <main className="page">
+      <LeftSideBar />
+      <ProfileInfo profileUser={params.username} />
+      <RightSideBar />
+    </main>
+  );
+}

@@ -7,7 +7,7 @@ import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
 import { toastOptions } from "../utils/constants";
 
-export default function SignIn() {
+export default function LandingSignIn() {
   const router = useRouter();
   const {
     register,
@@ -30,9 +30,9 @@ export default function SignIn() {
       );
     } else {
       reset();
-      (document as any).getElementById("my_modal_2")?.close();
+      (document as any).getElementById("my_modal_8")?.close();
       toast.success("Successfully logged In", toastOptions);
-      router.refresh();
+      router.push("/home");
     }
   };
   return (
@@ -41,13 +41,13 @@ export default function SignIn() {
         className="p-2 text capitalize border border-gray-600 rounded-3xl max-w-sm w-full mt-5
           hover:bg-neutral hover:cursor-pointer text-center"
         onClick={() =>
-          (document as any).getElementById("my_modal_2").showModal()
+          (document as any).getElementById("my_modal_8").showModal()
         }
       >
         sign in
       </div>
 
-      <dialog id="my_modal_2" className="modal">
+      <dialog id="my_modal_8" className="modal">
         <div className="modal-box">
           <form method="dialog" className="flex items-center justify-between">
             <BsTwitter

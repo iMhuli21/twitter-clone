@@ -1,24 +1,45 @@
 import { BsTwitter } from "react-icons/bs";
-import { routes } from "../utils/constants";
+import { ISession, IUser, routes } from "../utils/constants";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../utils/Auth";
 import { RiQuillPenLine } from "react-icons/ri";
+import prisma from "../utils/Db";
 
 export default async function LeftSideBar() {
+  let user: IUser | null = null;
   const session = await getServerSession(authOptions);
+
+  if (session) {
+    user = await prisma.user.findUnique({
+      where: {
+        id: `${(session as ISession).user?.id}`,
+      },
+    });
+  }
+
   return (
     <div className="border-r border-gray-600 h-full col-span-1 p-2 flex flex-col items-center">
       <BsTwitter className="text-3xl text-sky-700" />
-      {session?.user && (
+      {user && (
         <>
           <ul className="flex flex-col gap-7 mt-10 overflow-hidden">
             {routes.map((route) => (
               <li className="w-full" key={route.href}>
-                <Link href={route.href} className="flex items-center gap-2">
-                  <route.icon className="text-2xl" />
-                  <span className="hidden md:inline">{route.label}</span>
-                </Link>
+                {route.href === "/profile" ? (
+                  <Link
+                    href={`/profile/${user?.username}`}
+                    className="flex items-center gap-2"
+                  >
+                    <route.icon className="text-2xl" />
+                    <span className="hidden md:inline">{route.label}</span>
+                  </Link>
+                ) : (
+                  <Link href={route.href} className="flex items-center gap-2">
+                    <route.icon className="text-2xl" />
+                    <span className="hidden md:inline">{route.label}</span>
+                  </Link>
+                )}
               </li>
             ))}
           </ul>

@@ -21,3 +21,11 @@ body {
 .page {
   @apply w-full grid grid-cols-6 min-h-screen;
 }
+
+.active-tab {
+  @apply  text-gray-300 relative before:content-[''] before:absolute before:w-full before:h-1 before:rounded before:bg-sky-700 before:-bottom-1 py-2 hover:cursor-pointer;
+}
+
+.normal-tab {
+  @apply text-sm text-gray-500 py-2 hover:cursor-pointer p-2;
+}

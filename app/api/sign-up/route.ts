@@ -37,7 +37,7 @@ export async function POST(req: Request) {
     //hash password
     const hashedPassword = await hash(body.password, 10);
 
-    const image = "/default/profile_picture.jpg";
+    const image = "http://localhost:3000/default/default_profile_picture.jpg";
 
     const createAccount = await prisma.user.create({
       data: {

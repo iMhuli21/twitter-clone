@@ -1,18 +1,18 @@
 "use client";
 
 import Options from "./Options";
-import { useState } from "react";
 import { BsChevronRight } from "react-icons/bs";
 import SignOut from "./SignOut";
 import { IAccountProps, IUser } from "../utils/constants";
+import { useRouter } from "next/navigation";
 
-export default function Account({ data }: IAccountProps) {
-  const [showSide, setShowSide] = useState(false);
+export default function Account({ data, view }: IAccountProps) {
+  const router = useRouter();
   return (
     <>
       <div
         className={
-          showSide
+          view
             ? "hidden md:col-span-2 md:flex flex-col items-start gap-2"
             : "col-span-5 md:col-span-2 flex flex-col items-start gap-2"
         }
@@ -23,14 +23,14 @@ export default function Account({ data }: IAccountProps) {
         <div
           className="flex items-center w-full justify-between p-3
        hover:cursor-pointer hover:bg-neutral mt-3"
-          onClick={() => setShowSide(!showSide)}
+          onClick={() => router.push("/settings?view=layout")}
         >
           <span>Your account</span>
           <BsChevronRight />
         </div>
         <SignOut />
       </div>
-      <Options state={showSide} data={data} />
+      <Options view={view} data={data} />
     </>
   );
 }

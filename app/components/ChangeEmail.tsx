@@ -53,15 +53,17 @@ export default function ChangeEmail({ data }: IAccountProps) {
           <h3 className="font-bold text-base">Change email</h3>
           <span className="text-sm">Update your email address.</span>
           <div className="py-4 flex flex-col items-start justify-start w-full gap-2">
-            <div className="flex flex-col items-start border rounded-lg border-info w-full p-2 gap-2">
-              <span className="text-sm text-info">Email</span>
+            <div className="flex flex-col items-start w-full">
+              <label htmlFor="email" className="label">
+                <span className="label-text">Email</span>
+              </label>
               <input
                 type="email"
                 name="email"
                 id="email"
-                value={email}
+                className="input input-bordered w-full max-w-md"
+                value={data.email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-transparent border-none outline-none"
               />
             </div>
             <button

@@ -7,16 +7,12 @@ import ChangePassword from "./ChangePassword";
 import DeactivateAccount from "./DeactivateAccount";
 import { IAccountProps } from "../utils/constants";
 
-interface OptionsProps extends IAccountProps {
-  state: boolean;
-}
-
-export default function Options({ state, data }: OptionsProps) {
+export default function Options({ view, data }: IAccountProps) {
   const router = useRouter();
   return (
     <div
       className={
-        !state
+        !view
           ? "hidden md:col-span-3 md:flex flex-col items-start gap-2 border-l border-gray-600"
           : "col-span-5 md:col-span-3 flex flex-col items-start gap-2 border-l border-gray-600"
       }

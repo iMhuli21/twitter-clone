@@ -85,6 +85,7 @@ export interface IUser {
 
 export interface IAccountProps {
   data: IUser;
+  view?: string;
 }
 export enum Status {
   seen = "seen",

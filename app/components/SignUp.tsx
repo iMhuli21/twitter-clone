@@ -70,12 +70,15 @@ export default function SignUp() {
 
       <dialog id="my_modal_1" className="modal">
         <div className="modal-box">
-          <form method="dialog">
+          <form method="dialog" className="flex items-center justify-between">
+            <BsTwitter
+              className="text-sky-700 text-center absolute top-2"
+              size={30}
+            />
             <button className="btn btn-sm btn-circle text-xl btn-ghost absolute right-2 top-2 focus:border-none focus:outline-none">
               ✕
             </button>
           </form>
-          <BsTwitter className="text-2xl text-sky-700 text-center" />
           <h1 className="font-extrabold text-xl mt-3 text-center w-full">
             Create your account
           </h1>
@@ -116,8 +119,8 @@ export default function SignUp() {
                 className="input input-bordered max-w-sm w-full"
               />
               <span className="label-text-alt mt-1">
-                *Password must be have atleast one Uppercase,lowercase,symbol
-                and must be min 8 chars
+                *Password must have atleast one uppercase, lowercase, symbol and
+                must be minimum of 8 characters.
               </span>
             </div>
 

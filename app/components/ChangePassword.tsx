@@ -67,16 +67,18 @@ export default function ChangePassword() {
           <h3 className="font-bold text-base">Change password</h3>
           <span className="text-sm">Update your password.</span>
           <div className="py-4 flex flex-col items-start justify-start w-full gap-2">
-            <div className="flex flex-col items-start border rounded-lg border-info w-full p-2 gap-2">
-              <span className="text-sm text-info">Password</span>
+            <div className="flex flex-col items-start w-full">
+              <label htmlFor="password" className="label">
+                <span className="label-text">Password</span>
+              </label>
               <input
                 type="password"
                 name="password"
                 id="password"
+                className="input input-bordered w-full max-w-md"
+                placeholder="New Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="New Password"
-                className="w-full bg-transparent border-none outline-none"
               />
             </div>
             <button
