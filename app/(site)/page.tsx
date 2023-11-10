@@ -1,6 +1,6 @@
 import { BsTwitter } from "react-icons/bs";
-import SignUp from "../components/SignUp";
 import LandingSignIn from "../components/LandingSignIn";
+import LandingSignUp from "../components/LandingSignUp";
 
 export default function Home() {
   return (
@@ -13,7 +13,7 @@ export default function Home() {
         <h3 className="font-bold text-xl mt-5">Join today</h3>
         <LandingSignIn />
         <span>or</span>
-        <SignUp />
+        <LandingSignUp />
       </div>
     </main>
   );

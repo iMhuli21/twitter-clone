@@ -5,10 +5,10 @@ import { BsTwitter } from "react-icons/bs";
 import { useRouter } from "next/navigation";
 import { FieldValues, useForm } from "react-hook-form";
 import { isCustomError, toastOptions } from "../utils/constants";
-import { useState } from "react";
 import { FaEye } from "react-icons/fa6";
+import { useState } from "react";
 
-export default function SignUp() {
+export default function LandingSignUp() {
   const router = useRouter();
   const {
     register,
@@ -41,7 +41,7 @@ export default function SignUp() {
         "Successfully created account, you can now login",
         toastOptions
       );
-      (document as any).getElementById("my_modal_2").showModal();
+      (document as any).getElementById("my_modal_8").showModal();
     }
   };
 
@@ -57,7 +57,7 @@ export default function SignUp() {
           className="p-2 text capitalize bg-info rounded-3xl max-w-sm w-full mt-2
            text-white hover:bg-sky-500 transition ease-in-out hover:cursor-pointer text-center"
           onClick={() =>
-            (document as any).getElementById("my_modal_1").showModal()
+            (document as any).getElementById("my_modal_13").showModal()
           }
         >
           create account
@@ -76,7 +76,7 @@ export default function SignUp() {
         </span>
       </div>
 
-      <dialog id="my_modal_1" className="modal">
+      <dialog id="my_modal_13" className="modal">
         <div className="modal-box">
           <form method="dialog" className="flex items-center justify-between">
             <BsTwitter
@@ -131,7 +131,6 @@ export default function SignUp() {
               <label htmlFor="sign_up_password" className="label">
                 <span className="label-text">Password</span>
               </label>
-
               <div className="w-full flex items-center input input-bordered max-w-sm">
                 <input
                   {...register("sign_up_password")}
@@ -161,7 +160,7 @@ export default function SignUp() {
             <span
               className="label-text hover:border-b hover:cursor-pointer"
               onClick={() =>
-                (document as any).getElementById("my_modal_2").showModal()
+                (document as any).getElementById("my_modal_8").showModal()
               }
             >
               Already have an account?

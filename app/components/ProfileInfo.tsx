@@ -7,6 +7,7 @@ import { BsCalendar3 } from "react-icons/bs";
 import { DateTime } from "luxon";
 import Tabs from "./Tabs";
 import EditInfo from "./EditInfo";
+import { redirect } from "next/navigation";
 
 interface ProfileInfoProps {
   profileUser: string;
@@ -37,6 +38,10 @@ export default async function ProfileInfo({ profileUser }: ProfileInfoProps) {
     },
   });
 
+  if (!queriedUser) {
+    redirect("/home");
+  }
+
   const userDate = queriedUser && DateTime.fromJSDate(queriedUser.createdAt);
 
   return (
@@ -48,30 +53,36 @@ export default async function ProfileInfo({ profileUser }: ProfileInfoProps) {
           <span className="text-sm">{queriedUser?.posts.length} posts</span>
         </div>
       </div>
-      <div className="h-52">
-        {queriedUser?.bannerImage ? (
-          <>he</>
-        ) : (
-          <div className="relative">
-            <div className="w-full h-32 bg-gray-300 absolute top-0"></div>
-            <div className="absolute top-[5rem] flex items-end justify-between w-full px-5 py-2">
-              <img
-                src={queriedUser?.photo}
-                className="w-24 h-24 lg:w-28 lg:h-28 rounded-full border-2 object-cover"
-                alt="user profile"
+      <div className="h-64">
+        <div className="relative">
+          <div
+            className="w-full h-52 bg-gray-300 absolute top-0 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: `url(${queriedUser.bannerImage})` }}
+          ></div>
+          <div className="absolute top-[9.7rem] lg:top-[9rem] flex items-end justify-between w-full px-5 py-2">
+            <img
+              loading="lazy"
+              src={queriedUser?.photo}
+              className="w-24 h-24 lg:w-28 lg:h-28 rounded-full border-2 object-cover"
+              alt="user profile"
+            />
+            {loggedInUser?.username === queriedUser?.username ? (
+              <EditInfo
+                banner={queriedUser.bannerImage}
+                id={queriedUser?.id}
+                name={queriedUser?.headerTitle}
+                photo={queriedUser?.photo}
+                bio={queriedUser?.bio}
               />
-              {loggedInUser?.username === queriedUser?.username && (
-                <EditInfo
-                  name={queriedUser?.headerTitle}
-                  photo={queriedUser?.photo}
-                  banner={queriedUser?.bannerImage}
-                />
-              )}
-            </div>
+            ) : (
+              <button className="btn btn-info text-white rounded-3xl">
+                Follow
+              </button>
+            )}
           </div>
-        )}
+        </div>
       </div>
-      <div className="px-5 py-2 flex flex-col items-start gap-2">
+      <div className="px-5 py-2 flex flex-col items-start gap-2 mt-2">
         <div className="flex flex-col items-start">
           <h1 className="text-lg font-medium">@{queriedUser?.headerTitle}</h1>
           <h3 className="text-xs">@{queriedUser?.username}</h3>

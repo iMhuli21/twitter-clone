@@ -29,3 +29,7 @@ body {
 .normal-tab {
   @apply text-sm text-gray-500 py-2 hover:cursor-pointer p-2;
 }
+
+input:-webkit-autofill {
+  -webkit-box-shadow:0 0 0px 1000px #1d232a inset;
+}

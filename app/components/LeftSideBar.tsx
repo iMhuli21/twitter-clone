@@ -37,7 +37,9 @@ export default async function LeftSideBar() {
                 ) : (
                   <Link href={route.href} className="flex items-center gap-2">
                     <route.icon className="text-2xl" />
-                    <span className="hidden md:inline">{route.label}</span>
+                    <span className="hidden md:inline truncate">
+                      {route.label}
+                    </span>
                   </Link>
                 )}
               </li>

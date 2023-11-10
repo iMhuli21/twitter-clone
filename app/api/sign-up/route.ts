@@ -8,13 +8,19 @@ interface IBodyData {
   email: string;
   password: string;
   username: string;
+  bio: string;
 }
 
 export async function POST(req: Request) {
   try {
     const body: IBodyData = await req.json();
 
-    if (!body.email || !body.password || !body.username) {
+    if (
+      !body.email ||
+      !body.password ||
+      !body.username ||
+      body.bio.length === 0
+    ) {
       throw new Error("All fields are required");
     }
 
@@ -39,8 +45,12 @@ export async function POST(req: Request) {
 
     const image = "http://localhost:3000/default/default_profile_picture.jpg";
 
+    const bannerImage = "http://localhost:3000/default/default_banner.jpg";
+
     const createAccount = await prisma.user.create({
       data: {
+        bannerImage,
+        bio: body.bio,
         email: body.email,
         headerTitle: body.username,
         password: hashedPassword,

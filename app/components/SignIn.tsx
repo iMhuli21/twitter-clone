@@ -6,6 +6,8 @@ import { FieldValues, useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
 import { toastOptions } from "../utils/constants";
+import { FaEye } from "react-icons/fa6";
+import { useState } from "react";
 
 export default function SignIn() {
   const router = useRouter();
@@ -15,6 +17,7 @@ export default function SignIn() {
     formState: { isSubmitting },
     handleSubmit,
   } = useForm();
+  const [passwordType, setPasswordType] = useState("password");
 
   const onSubmit = async (data: FieldValues) => {
     const loginUser = await signIn("credentials", {
@@ -30,10 +33,16 @@ export default function SignIn() {
       );
     } else {
       reset();
-      (document as any).getElementById("my_modal_2")?.close();
+      (document as any).getElementById("my_modal_2").close();
       toast.success("Successfully logged In", toastOptions);
       router.refresh();
     }
+  };
+
+  const changePasswordType = () => {
+    setPasswordType("text");
+
+    setTimeout(() => setPasswordType("password"), 5000);
   };
   return (
     <>
@@ -79,13 +88,19 @@ export default function SignIn() {
               <label htmlFor="sign_in_password" className="label">
                 <span className="label-text">Password</span>
               </label>
-              <input
-                {...register("sign_in_password")}
-                type="password"
-                name="sign_in_password"
-                id="sign_in_password"
-                className="input input-bordered max-w-sm w-full"
-              />
+
+              <div className="w-full flex items-center input input-bordered max-w-sm">
+                <input
+                  {...register("sign_in_password")}
+                  type={passwordType}
+                  name="sign_in_password"
+                  id="sign_in_password"
+                  className="p-2 w-full bg-inherit select-none"
+                />
+                <div className="flex items-center justify-center p-2 hover:cursor-pointer">
+                  <FaEye onClick={changePasswordType} />
+                </div>
+              </div>
               <span className="label-text-alt mt-1">
                 *Password must have atleast one uppercase, lowercase, symbol and
                 must be minimum of 8 characters.

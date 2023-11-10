@@ -72,7 +72,7 @@ export interface ISession {
 export interface IUser {
   id: string;
   bannerImage: string | null;
-  bio: string | null;
+  bio: string;
   createdAt: Date;
   email: string;
   following: number;
@@ -83,6 +83,14 @@ export interface IUser {
   username: string;
 }
 
+export interface IPost {
+  id: string;
+  authorId: string;
+  body: string | null;
+  createdAt: Date;
+  media: string[];
+}
+
 export interface IAccountProps {
   data: IUser;
   view?: string;
@@ -90,4 +98,35 @@ export interface IAccountProps {
 export enum Status {
   seen = "seen",
   unseen = "unseen",
+}
+
+export const DIVISIONS: DivisionsType[] = [
+  { amount: 60, name: "seconds" },
+  { amount: 60, name: "minutes" },
+  { amount: 24, name: "hours" },
+  { amount: 7, name: "days" },
+  { amount: 4.34524, name: "weeks" },
+  { amount: 12, name: "months" },
+  { amount: Number.POSITIVE_INFINITY, name: "years" },
+];
+
+interface DivisionsType {
+  amount: number;
+  name: Intl.RelativeTimeFormatUnit;
+}
+
+const time = new Intl.RelativeTimeFormat("en-us", {
+  numeric: "auto",
+});
+
+export function formatTimeAgo(date: Date) {
+  let duration = (date.getTime() - new Date().getTime()) / 1000;
+
+  for (let i = 0; i < DIVISIONS.length; i++) {
+    const division = DIVISIONS[i];
+    if (Math.abs(duration) < division.amount) {
+      return time.format(Math.round(duration), division.name);
+    }
+    duration /= division.amount;
+  }
 }
