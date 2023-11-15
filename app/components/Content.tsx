@@ -6,7 +6,13 @@ export default async function Content() {
     orderBy: {
       createdAt: "desc",
     },
+    include: {
+      likes: true,
+      comments: true,
+      retweets: true,
+    },
   });
+
   return (
     <div>
       {posts.map((post) => (

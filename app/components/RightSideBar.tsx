@@ -25,7 +25,7 @@ export default async function RightSideBar() {
         <Search />
       ) : (
         <div
-          className="border p-2 border-gray-500 rounded-xl h-80 flex flex-col items-center justify-center
+          className="border p-2 border-gray-600 rounded-xl h-80 flex flex-col items-center justify-center
       shadow-lg hover:cursor-pointer max-w-md w-full"
         >
           <h1 className="font-extrabold text-center text-xl">

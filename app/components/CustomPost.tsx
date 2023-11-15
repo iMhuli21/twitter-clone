@@ -1,24 +1,26 @@
-"use client";
-
-import { MdVerified } from "react-icons/md";
-import { IPost, IUser, formatTimeAgo } from "../utils/constants";
-import { BsDot } from "react-icons/bs";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import prisma from "../utils/Db";
+import { IPost, ISession } from "../utils/constants";
+import { MdVerified } from "react-icons/md";
+import { BsDot } from "react-icons/bs";
+import { DateTime } from "luxon";
 import Likes from "./Likes";
-import Retweets from "./Retweets";
 import Comments from "./Comments";
+import Retweets from "./Retweets";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../utils/Auth";
+import CreateComment from "./CreateComment";
+import CommentContainer from "./CommentContainer";
 
-interface PostProps {
+interface props {
   post: IPost;
-  author: IUser;
 }
 
-export default function Post({ post, author }: PostProps) {
+export default async function CustomPost({ post }: props) {
   let likesCount = "";
   let retweetsCount = "";
   let commentCount = "";
-  const router = useRouter();
+  const session = await getServerSession(authOptions);
 
   if (post.likes) {
     likesCount =
@@ -40,37 +42,42 @@ export default function Post({ post, author }: PostProps) {
         ? `${post.comments.length}k`
         : `${post.comments.length}`;
   }
+  const authorInformation = await prisma.user.findUnique({
+    where: {
+      id: post?.authorId,
+    },
+  });
 
+  const postDate = DateTime.fromISO(post.createdAt.toISOString());
+
+  const loggedInUser = await prisma.user.findUnique({
+    where: {
+      id: `${(session as ISession).user?.id}`,
+    },
+  });
+
+  if (!authorInformation) return "User does not exist";
   return (
-    <div
-      className="flex items-start gap-3 py-2 px-4 sm:px-6 border-b border-gray-600 w-full hover:cursor-pointer hover:bg-neutral transition"
-      onDoubleClick={() => router.push(`/post/${post.id}`)}
-    >
-      <img
-        src={author.photo}
-        alt="user profile"
-        loading="lazy"
-        className="object-cover object-center w-12 h-12 rounded-full"
-      />
-      <div className="w-full flex flex-col items-start gap-2">
+    <div className="flex flex-col items-start w-full hover:cursor-pointer">
+      <div className="w-full flex flex-col items-start gap-2 py-2 px-4 sm:px-6">
         <div className="flex items-center gap-2 w-full">
-          <Link href={`/profile/${author.username}`}>
+          <img
+            src={authorInformation.photo}
+            alt="user profile"
+            loading="lazy"
+            className="object-cover object-center w-12 h-12 rounded-full"
+          />
+          <Link href={`/profile/${authorInformation.username}`}>
             <h1 className="flex items-center gap-1">
               <span className="font-medium hover:border-b border-gray-500 transition">
-                {author.headerTitle}
+                {authorInformation.headerTitle}
               </span>
               <MdVerified className="text-sky-700" />
             </h1>
           </Link>
 
           <div className="flex items-center gap-2 text-sm">
-            <span>@{author.username}</span>
-            <div className="flex items-center">
-              <BsDot />
-              <span className="hidden sm:block">
-                {formatTimeAgo(post.createdAt)}
-              </span>
-            </div>
+            <span>@{authorInformation.username}</span>
           </div>
         </div>
 
@@ -97,12 +104,36 @@ export default function Post({ post, author }: PostProps) {
             </div>
           )}
 
-          <div className="flex items-center gap-2 justify-between w-full p-2">
+          <div className="flex items-center gap-1 text-sm text-gray-500 py-2">
+            <span>
+              {postDate.hour}:{postDate.minute} PM
+            </span>
+            <BsDot />
+            <span>
+              {postDate.monthShort} {postDate.day}, {postDate.year}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 justify-between w-full p-2 border-t border-b border-gray-600">
             <Comments count={commentCount} />
             <Retweets count={retweetsCount} postId={post.id} />
             <Likes count={likesCount} postId={post.id} />
           </div>
         </div>
+      </div>
+
+      {loggedInUser && (
+        <CreateComment
+          photo={loggedInUser.photo}
+          postId={post.id}
+          userId={loggedInUser.id}
+        />
+      )}
+
+      <div className="w-full">
+        {post?.comments?.map((comment) => (
+          <CommentContainer key={comment.id} comment={comment} />
+        ))}
       </div>
     </div>
   );

@@ -37,6 +37,7 @@ export default function SignUp() {
       toast.error(sentRes.error, toastOptions);
     } else {
       reset();
+      (document as any).getElementById("my_modal_1").close();
       toast.success(
         "Successfully created account, you can now login",
         toastOptions

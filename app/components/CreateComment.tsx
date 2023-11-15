@@ -10,12 +10,13 @@ import toast from "react-hot-toast";
 import { isCustomError, toastOptions } from "../utils/constants";
 import { useRouter } from "next/navigation";
 
-interface CreatePostProps {
-  id: string | undefined;
+interface props {
+  userId: string | undefined;
+  postId: string | undefined;
   photo: string | undefined;
 }
 
-export default function CreatePost({ id, photo }: CreatePostProps) {
+export default function CreateComment({ userId, postId, photo }: props) {
   const router = useRouter();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [showEmojiMenu, setShowEmojiMenu] = useState(false);
@@ -28,12 +29,12 @@ export default function CreatePost({ id, photo }: CreatePostProps) {
     setShowEmojiMenu(!showEmojiMenu);
   };
 
-  const sendOutPost = async () => {
+  const sendOutComment = async () => {
     setPending(true);
     const formData = new FormData();
 
-    if (!id) {
-      toast.error("No Id", toastOptions);
+    if (!postId || !userId) {
+      toast.error("No post Id or userId", toastOptions);
       setPending(false);
       return;
     }
@@ -48,9 +49,10 @@ export default function CreatePost({ id, photo }: CreatePostProps) {
       formData.set("message", message);
     }
 
-    formData.set("id", id);
+    formData.set("userId", userId);
+    formData.set("postId", postId);
 
-    const sendReq = await fetch("/api/post", {
+    const sendReq = await fetch("/api/comment", {
       method: "POST",
       body: formData,
     });
@@ -67,12 +69,8 @@ export default function CreatePost({ id, photo }: CreatePostProps) {
     setMedia([]);
     setMessage("");
   };
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
   return (
-    <div className="flex flex-col items-start justify-center w-full py-2 px-5 border-b border-gray-600 hover:cursor-pointer">
+    <div className="flex flex-col items-start justify-center w-full py-2 px-4 sm:px-6 border-b border-gray-600 hover:cursor-pointer">
       <div className="flex items-center gap-2 w-full justify-center">
         <img
           alt="user profile"
@@ -84,7 +82,7 @@ export default function CreatePost({ id, photo }: CreatePostProps) {
           ref={inputRef}
           name="post"
           id="post"
-          placeholder="What is happening?!"
+          placeholder="Post your reply"
           className="p-4 w-full bg-inherit min-h-16 placeholder:text-lg resize-none outline-none border-none"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
@@ -148,10 +146,11 @@ export default function CreatePost({ id, photo }: CreatePostProps) {
         </div>
         <button
           disabled={isPending}
-          className="btn btn-info text-white rounded-3xl normal-case w-32 disabled:bg-gray-500"
-          onClick={sendOutPost}
+          className="btn btn-info text-white rounded-3xl normal-case w-32
+           disabled:bg-gray-500"
+          onClick={sendOutComment}
         >
-          Post
+          Reply
         </button>
       </div>
     </div>

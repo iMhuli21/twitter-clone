@@ -3,6 +3,7 @@ import { LuMail } from "react-icons/lu";
 import { BiUser } from "react-icons/bi";
 import { FaGears } from "react-icons/fa6";
 import { ISODateString } from "next-auth";
+import { Prisma } from "@prisma/client";
 
 export enum THEME {
   DARK = "DARK",
@@ -59,6 +60,10 @@ interface ICustomError {
   error: string;
 }
 
+export interface ICustomMessage {
+  success: string;
+}
+
 export interface ISession {
   user?: {
     name?: string | null;
@@ -89,8 +94,59 @@ export interface IPost {
   body: string | null;
   createdAt: Date;
   media: string[];
+  likes?: ILikePost[];
+  comments?: IComment[];
+  retweets?: IRetweetPost[];
 }
 
+export interface IRetweets {
+  id: string;
+  postId: string;
+  commentId: string;
+  userId: string;
+}
+
+export interface IComment {
+  id: string;
+  body: string | null;
+  createdAt: Date;
+  media: string[];
+  postId: string;
+  userId: string;
+  likes?: ILikeComment[];
+  retweets?: IRetweetComment[];
+  replies?: IReply[];
+}
+
+export interface ILikePost {
+  id: string;
+  postId: string;
+  userId: string;
+}
+
+export interface IReply {
+  id: string;
+  commentId: string;
+  userId: string;
+}
+
+export interface IRetweetPost {
+  id: string;
+  postId: string;
+  userId: string;
+}
+
+export interface IRetweetComment {
+  id: string;
+  commentId: string;
+  userId: string;
+}
+
+export interface ILikeComment {
+  id: string;
+  commentId: string;
+  userId: string;
+}
 export interface IAccountProps {
   data: IUser;
   view?: string;

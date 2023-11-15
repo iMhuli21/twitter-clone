@@ -1,51 +1,40 @@
 "use client";
 
-import { MdVerified } from "react-icons/md";
-import { IPost, IUser, formatTimeAgo } from "../utils/constants";
-import { BsDot } from "react-icons/bs";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Likes from "./Likes";
-import Retweets from "./Retweets";
+import { IComment, IUser, formatTimeAgo } from "../utils/constants";
+import Link from "next/link";
+import { MdVerified } from "react-icons/md";
+import { BsDot } from "react-icons/bs";
 import Comments from "./Comments";
+import Retweets from "./Retweets";
+import Likes from "./Likes";
 
-interface PostProps {
-  post: IPost;
+interface props {
+  comment: IComment;
   author: IUser;
 }
 
-export default function Post({ post, author }: PostProps) {
+export default function Comment({ comment, author }: props) {
   let likesCount = "";
   let retweetsCount = "";
-  let commentCount = "";
   const router = useRouter();
 
-  if (post.likes) {
+  if (comment.likes) {
     likesCount =
-      post.likes.length > 999
-        ? `${post.likes.length}k`
-        : `${post.likes.length}`;
+      comment.likes.length > 999
+        ? `${comment.likes.length}k`
+        : `${comment.likes.length}`;
   }
 
-  if (post.retweets) {
+  if (comment.retweets) {
     retweetsCount =
-      post.retweets.length > 999
-        ? `${post.retweets.length}k`
-        : `${post.retweets.length}`;
-  }
-
-  if (post.comments) {
-    commentCount =
-      post.comments.length > 999
-        ? `${post.comments.length}k`
-        : `${post.comments.length}`;
+      comment.retweets.length > 999
+        ? `${comment.retweets.length}k`
+        : `${comment.retweets.length}`;
   }
 
   return (
-    <div
-      className="flex items-start gap-3 py-2 px-4 sm:px-6 border-b border-gray-600 w-full hover:cursor-pointer hover:bg-neutral transition"
-      onDoubleClick={() => router.push(`/post/${post.id}`)}
-    >
+    <div className="flex items-start gap-3 py-2 px-4 sm:px-6 border-b border-gray-600 w-full hover:cursor-pointer hover:bg-neutral transition">
       <img
         src={author.photo}
         alt="user profile"
@@ -68,18 +57,18 @@ export default function Post({ post, author }: PostProps) {
             <div className="flex items-center">
               <BsDot />
               <span className="hidden sm:block">
-                {formatTimeAgo(post.createdAt)}
+                {formatTimeAgo(comment.createdAt)}
               </span>
             </div>
           </div>
         </div>
 
         <div className="flex flex-col items-start gap-2 w-full">
-          <p className="w-full">{post.body}</p>
+          <p className="w-full">{comment.body}</p>
 
-          {post.media.length !== 0 && (
+          {comment.media.length !== 0 && (
             <div className="w-full grid grid-flow-col-dense">
-              {post.media.map((pic) => (
+              {comment.media.map((pic) => (
                 <a
                   href={pic}
                   target="_blank"
@@ -98,9 +87,9 @@ export default function Post({ post, author }: PostProps) {
           )}
 
           <div className="flex items-center gap-2 justify-between w-full p-2">
-            <Comments count={commentCount} />
-            <Retweets count={retweetsCount} postId={post.id} />
-            <Likes count={likesCount} postId={post.id} />
+            <Comments count={0} />
+            <Retweets count={retweetsCount} commentId={comment.id} />
+            <Likes count={likesCount} commentId={comment.id} />
           </div>
         </div>
       </div>

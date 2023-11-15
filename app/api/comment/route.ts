@@ -5,58 +5,75 @@ export async function POST(req: Request) {
   try {
     const data = await req.formData();
 
-    const id = data.get("id") as string;
+    const userId = data.get("userId") as string;
+
+    const postId = data.get("postId") as string;
 
     const message = data.get("message") as string;
 
     const pictures = data.getAll("media") as string[];
 
-    if (!id) throw new Error("No userId");
+    if (!userId || !postId) throw new Error("No post id or user id");
 
     if (!message && !pictures) throw new Error("No message");
 
     if (message && pictures) {
-      const createPost = await prisma.post.create({
+      const createComment = await prisma.comment.create({
         data: {
           body: message,
           media: pictures,
-          author: {
+          post: {
             connect: {
-              id: id,
+              id: postId,
+            },
+          },
+          user: {
+            connect: {
+              id: userId,
             },
           },
         },
       });
 
-      if (!createPost)
+      if (!createComment)
         throw new Error("Something went wrong, try again after a few minutes");
     } else if (message) {
-      const createPost = await prisma.post.create({
+      const createComment = await prisma.comment.create({
         data: {
           body: message,
-          author: {
+          post: {
             connect: {
-              id: id,
+              id: postId,
+            },
+          },
+          user: {
+            connect: {
+              id: userId,
             },
           },
         },
       });
 
-      if (!createPost)
+      if (!createComment)
         throw new Error("Something went wrong, try again after a few minutes");
     } else if (pictures) {
-      const createPost = await prisma.post.create({
+      const createComment = await prisma.comment.create({
         data: {
           media: pictures,
-          author: {
+          post: {
             connect: {
-              id: id,
+              id: postId,
+            },
+          },
+          user: {
+            connect: {
+              id: userId,
             },
           },
         },
       });
 
-      if (!createPost)
+      if (!createComment)
         throw new Error("Something went wrong, try again after a few minutes");
     }
 
