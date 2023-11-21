@@ -15,8 +15,6 @@ export async function POST(req: Request) {
     if (!userId) throw new Error("No user id provided");
 
     if (postId) {
-      console.log("Im retweeting a post");
-
       //the first thing is to check if the user has retweeted the post
       const currPost = await prisma.post.findUnique({
         where: {
@@ -36,7 +34,7 @@ export async function POST(req: Request) {
 
       if (!alreadyRetweeted) {
         //if they havent retweeted the post yet we then retweet the post
-        const likePost = await prisma.retweetPost.create({
+        const retweetPost = await prisma.retweetPost.create({
           data: {
             userId,
             post: {
@@ -47,7 +45,7 @@ export async function POST(req: Request) {
           },
         });
 
-        if (!likePost)
+        if (!retweetPost)
           throw new Error("Something went wrong, try again after few minutes");
 
         return NextResponse.json(
@@ -72,8 +70,60 @@ export async function POST(req: Request) {
         );
       }
     } else if (commentId) {
-      console.log("Im retweeting a comment");
-      return NextResponse.json({ success: true }, { status: 200 });
+      //check if they have already retweeted the comment
+      const currComment = await prisma.comment.findUnique({
+        where: {
+          id: commentId,
+        },
+        include: {
+          retweets: true,
+        },
+      });
+
+      if (!currComment) throw new Error("Comment does not exist");
+
+      const alreadyRetweeted = lodash.find(currComment.retweets, {
+        commentId,
+        userId,
+      });
+
+      if (!alreadyRetweeted) {
+        //retweet comment
+        //if they havent retweeted the post yet we then retweet the post
+        const retweetComment = await prisma.retweetComment.create({
+          data: {
+            userId,
+            comment: {
+              connect: {
+                id: commentId,
+              },
+            },
+          },
+        });
+
+        if (!retweetComment)
+          throw new Error("Something went wrong, try again after few minutes");
+
+        return NextResponse.json(
+          { success: "Retweeted Comment" },
+          { status: 200 }
+        );
+      } else {
+        //remove the retweet
+        const removeRetweet = await prisma.retweetComment.delete({
+          where: {
+            id: alreadyRetweeted.id,
+          },
+        });
+
+        if (!removeRetweet)
+          throw new Error("Something went wrong, try again after few minutes");
+
+        return NextResponse.json(
+          { success: "Removed retweet" },
+          { status: 200 }
+        );
+      }
     }
   } catch (error) {
     let msg;

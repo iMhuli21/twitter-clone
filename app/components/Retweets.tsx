@@ -32,7 +32,7 @@ export default function Retweets({ count, postId, commentId }: props) {
     if (postId) {
       formData.set("postId", postId);
 
-      const sendReq = await fetch("/api/retweet-post", {
+      const sendReq = await fetch("/api/retweet", {
         method: "POST",
         body: formData,
       });
@@ -49,7 +49,7 @@ export default function Retweets({ count, postId, commentId }: props) {
     } else if (commentId) {
       formData.set("commentId", commentId);
 
-      const sendReq = await fetch("/api/retweet-comment", {
+      const sendReq = await fetch("/api/retweet", {
         method: "POST",
         body: formData,
       });
@@ -59,7 +59,7 @@ export default function Retweets({ count, postId, commentId }: props) {
       if (isCustomError(sentRes)) {
         toast.error(sentRes.error, toastOptions);
       } else {
-        toast.success("Retweeted Post", toastOptions);
+        toast.success((sentRes as ICustomMessage).success, toastOptions);
         router.refresh();
       }
     }

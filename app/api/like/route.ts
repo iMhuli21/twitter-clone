@@ -64,7 +64,56 @@ export async function POST(req: Request) {
       }
     } else if (commentId) {
       console.log("Im liking a comment");
-      return NextResponse.json({ success: true }, { status: 200 });
+
+      //check if the user has liked the comment
+      const currComment = await prisma.comment.findUnique({
+        where: {
+          id: commentId,
+        },
+        include: {
+          likes: true,
+        },
+      });
+
+      if (!currComment) throw new Error("Comment does not exist");
+
+      const alreadyLiked = lodash.find(currComment.likes, {
+        commentId,
+        userId,
+      });
+
+      if (!alreadyLiked) {
+        //like the comment
+        const likeComment = await prisma.likeComment.create({
+          data: {
+            userId,
+            comment: {
+              connect: {
+                id: commentId,
+              },
+            },
+          },
+        });
+
+        if (!likeComment)
+          throw new Error(
+            "Something went wrong, try again after a few minutes"
+          );
+
+        return NextResponse.json({ success: "Liked Comment" }, { status: 200 });
+      } else {
+        //remove like on comment
+        const removeLike = await prisma.likeComment.delete({
+          where: {
+            id: alreadyLiked.id,
+          },
+        });
+
+        if (!removeLike)
+          throw new Error("Something went wrong, try again after few minutes");
+
+        return NextResponse.json({ success: "Removed Like" }, { status: 200 });
+      }
     }
   } catch (error) {
     let msg;

@@ -87,7 +87,7 @@ export default function Comment({ comment, author }: props) {
           )}
 
           <div className="flex items-center gap-2 justify-between w-full p-2">
-            <Comments count={0} />
+            <Comments count={`${0}`} />
             <Retweets count={retweetsCount} commentId={comment.id} />
             <Likes count={likesCount} commentId={comment.id} />
           </div>

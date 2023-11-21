@@ -63,10 +63,12 @@ model Post {
 }
 
 model Reply {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  comment   Comment @relation(fields: [commentId], references: [id])
-  commentId String  @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  comment   Comment  @relation(fields: [commentId], references: [id])
+  commentId String   @db.ObjectId
   userId    String
+  body      String?
+  media     String[]
 }
 
 model LikePost {
