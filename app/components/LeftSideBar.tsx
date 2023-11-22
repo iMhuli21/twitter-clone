@@ -3,8 +3,8 @@ import { ISession, IUser, routes } from "../utils/constants";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../utils/Auth";
-import { RiQuillPenLine } from "react-icons/ri";
 import prisma from "../utils/Db";
+import PopUpPost from "./PopUpPost";
 
 export default async function LeftSideBar() {
   let user: IUser | null = null;
@@ -45,13 +45,7 @@ export default async function LeftSideBar() {
               </li>
             ))}
           </ul>
-          <button className="hidden lg:block btn btn-info text-white rounded-3xl w-40 mt-5">
-            Post
-          </button>
-
-          <div className="flex mt-5 lg:hidden justify-center items-center w-14 h-14 rounded-full bg-info text-white">
-            <RiQuillPenLine className="text-2xl" />
-          </div>
+          <PopUpPost author={user.id} authorPhoto={user.photo} />
         </>
       )}
     </div>

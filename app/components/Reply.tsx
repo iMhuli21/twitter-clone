@@ -1,52 +1,22 @@
 "use client";
 
-import { MdVerified } from "react-icons/md";
-import { IPost, IUser, formatTimeAgo } from "../utils/constants";
-import { BsDot } from "react-icons/bs";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Likes from "./Likes";
-import Retweets from "./Retweets";
-import Comments from "./Comments";
+import { IReply, IUser, formatTimeAgo } from "../utils/constants";
+import Link from "next/link";
+import { MdVerified } from "react-icons/md";
+import { BsDot } from "react-icons/bs";
 import DeleteBtn from "./DeleteBtn";
 
-interface PostProps {
-  post: IPost;
+interface props {
+  reply: IReply;
   author: IUser;
 }
 
-export default function Post({ post, author }: PostProps) {
-  let likesCount = "";
-  let retweetsCount = "";
-  let commentCount = "";
+export default function Reply({ reply, author }: props) {
   const router = useRouter();
 
-  if (post.likes) {
-    likesCount =
-      post.likes.length > 999
-        ? `${post.likes.length}k`
-        : `${post.likes.length}`;
-  }
-
-  if (post.retweets) {
-    retweetsCount =
-      post.retweets.length > 999
-        ? `${post.retweets.length}k`
-        : `${post.retweets.length}`;
-  }
-
-  if (post.comments) {
-    commentCount =
-      post.comments.length > 999
-        ? `${post.comments.length}k`
-        : `${post.comments.length}`;
-  }
-
   return (
-    <div
-      className="flex items-start gap-3 py-2 px-4 sm:px-6 border-b border-gray-600 w-full hover:cursor-pointer hover:bg-neutral transition"
-      onDoubleClick={() => router.push(`/post/${post.id}`)}
-    >
+    <div className="flex items-start gap-3 py-2 px-4 sm:px-6 border-b border-gray-600 w-full hover:cursor-pointer hover:bg-neutral transition">
       <img
         src={author.photo}
         alt="user profile"
@@ -70,21 +40,20 @@ export default function Post({ post, author }: PostProps) {
               <div className="flex items-center">
                 <BsDot />
                 <span className="hidden sm:block">
-                  {formatTimeAgo(post.createdAt)}
+                  {formatTimeAgo(reply.createdAt)}
                 </span>
               </div>
             </div>
           </div>
-
-          <DeleteBtn authorId={post.authorId} postId={post.id} />
+          <DeleteBtn authorId={reply.userId} replyId={reply.id} />
         </div>
 
         <div className="flex flex-col items-start gap-2 w-full">
-          <p className="w-full">{post.body}</p>
+          <p className="w-full">{reply.body}</p>
 
-          {post.media.length !== 0 && (
+          {reply.media.length !== 0 && (
             <div className="grid grid-cols-2 gap-4 rounded w-full place-content-between place-items-center">
-              {post.media.map((pic, i) => (
+              {reply.media.map((pic, i) => (
                 <a
                   href={pic}
                   target="_blank"
@@ -102,15 +71,6 @@ export default function Post({ post, author }: PostProps) {
               ))}
             </div>
           )}
-
-          <div className="flex items-center gap-2 justify-between w-full p-2">
-            <Comments
-              count={commentCount}
-              onClick={() => router.push(`/post/${post.id}`)}
-            />
-            <Retweets count={retweetsCount} postId={post.id} />
-            <Likes count={likesCount} postId={post.id} />
-          </div>
         </div>
       </div>
     </div>

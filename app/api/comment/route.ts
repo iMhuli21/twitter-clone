@@ -87,3 +87,48 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: msg }, { status: 400 });
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const data = await req.formData();
+
+    const authUser = data.get("authUser") as string;
+
+    const commentId = data.get("commentId") as string;
+
+    if (!authUser) throw new Error("No auth id provided");
+
+    if (!commentId) throw new Error("No comment Id provided");
+
+    const comment = await prisma.comment.findUnique({
+      where: {
+        id: commentId,
+      },
+    });
+
+    if (!comment) throw new Error("Comment does not exist");
+
+    //check if the auth user is the person who made the comment
+    if (comment.userId === authUser) {
+      const deleteComment = await prisma.comment.delete({
+        where: {
+          id: commentId,
+        },
+      });
+
+      if (!deleteComment)
+        throw new Error("Something went wrong, try again after few minutes");
+
+      return NextResponse.json({ success: "Deleted comment" }, { status: 200 });
+    } else {
+      throw new Error("Cannot delete a comment you did not create");
+    }
+  } catch (error) {
+    let msg;
+    if (error instanceof Error) {
+      msg = error.message;
+    }
+
+    return NextResponse.json({ error: msg }, { status: 400 });
+  }
+}

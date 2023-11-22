@@ -24,7 +24,7 @@ export default function CreatePost({ id, photo }: CreatePostProps) {
   const [media, setMedia] = useState<UploadFileResponse[] | undefined>([]);
 
   const addEmojiToMessage = (emoji: EmojiClickData, event: MouseEvent) => {
-    setMessage((curr) => `${curr} ${emoji.emoji}`);
+    setMessage((curr) => `${curr}${emoji.emoji}`);
     setShowEmojiMenu(!showEmojiMenu);
   };
 
@@ -91,18 +91,25 @@ export default function CreatePost({ id, photo }: CreatePostProps) {
         ></textarea>
       </div>
       {media?.length !== 0 && (
-        <div className="grid grid-flow-col border border-dashed rounded w-full place-content-between place-items-center border-spacing-10 border-gray-500">
+        <div className="grid grid-cols-2 gap-4 rounded w-full place-content-between place-items-center">
           {media?.map((pic, i) => (
-            <img
-              key={i}
-              src={pic.url}
-              loading="lazy"
-              alt="picture"
-              className="object-cover object-center w-52 rounded h-36 hover:cursor-pointer"
-              onClick={() =>
-                setMedia((curr) => media.filter((item) => item !== pic))
-              }
-            />
+            <div className="relative flex basis-auto">
+              <img
+                key={i}
+                src={pic.url}
+                loading="lazy"
+                alt="picture"
+                className="object-cover object-center max-w-xs w-full rounded-xl  hover:cursor-pointer"
+              />
+              <div
+                className="w-10 h-10 p-2 rounded-full text-lg bg-base-200 flex items-center justify-center absolute -right-2 -top-2"
+                onClick={() =>
+                  setMedia((curr) => media.filter((item) => item !== pic))
+                }
+              >
+                ✕
+              </div>
+            </div>
           ))}
         </div>
       )}

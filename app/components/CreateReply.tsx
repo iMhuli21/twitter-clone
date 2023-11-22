@@ -7,16 +7,20 @@ import EmojiPicker, { Theme, EmojiClickData } from "emoji-picker-react";
 import { UploadFileResponse } from "uploadthing/client";
 import { UploadButton } from "../utils/uploadthing";
 import toast from "react-hot-toast";
-import { isCustomError, toastOptions } from "../utils/constants";
+import {
+  ICustomMessage,
+  isCustomError,
+  toastOptions,
+} from "../utils/constants";
 import { useRouter } from "next/navigation";
 
 interface props {
   userId: string | undefined;
-  postId: string | undefined;
+  commentId: string | undefined;
   photo: string | undefined;
 }
 
-export default function CreateComment({ userId, postId, photo }: props) {
+export default function CreateReply({ userId, commentId, photo }: props) {
   const router = useRouter();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [showEmojiMenu, setShowEmojiMenu] = useState(false);
@@ -29,12 +33,12 @@ export default function CreateComment({ userId, postId, photo }: props) {
     setShowEmojiMenu(!showEmojiMenu);
   };
 
-  const sendOutComment = async () => {
+  const sendOutReply = async () => {
     setPending(true);
     const formData = new FormData();
 
-    if (!postId || !userId) {
-      toast.error("No post Id or userId", toastOptions);
+    if (!commentId || !userId) {
+      toast.error("No comment Id or userId", toastOptions);
       setPending(false);
       return;
     }
@@ -50,9 +54,9 @@ export default function CreateComment({ userId, postId, photo }: props) {
     }
 
     formData.set("userId", userId);
-    formData.set("postId", postId);
+    formData.set("commentId", commentId);
 
-    const sendReq = await fetch("/api/comment", {
+    const sendReq = await fetch("/api/reply", {
       method: "POST",
       body: formData,
     });
@@ -62,7 +66,7 @@ export default function CreateComment({ userId, postId, photo }: props) {
     if (isCustomError(sentRes)) {
       toast.error(sentRes.error, toastOptions);
     } else {
-      toast.success("Sent!", toastOptions);
+      toast.success((sentRes as ICustomMessage).success, toastOptions);
       router.refresh();
     }
     setPending(false);
@@ -80,8 +84,8 @@ export default function CreateComment({ userId, postId, photo }: props) {
         />
         <textarea
           ref={inputRef}
-          name="post"
-          id="post"
+          name="reply"
+          id="reply"
           placeholder="Post your reply"
           className="p-4 w-full bg-inherit min-h-16 placeholder:text-lg resize-none outline-none border-none"
           value={message}
@@ -148,7 +152,7 @@ export default function CreateComment({ userId, postId, photo }: props) {
           disabled={isPending}
           className="btn btn-info text-white rounded-3xl normal-case w-32
            disabled:bg-gray-500"
-          onClick={sendOutComment}
+          onClick={sendOutReply}
         >
           Reply
         </button>

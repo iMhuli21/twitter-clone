@@ -1,54 +1,55 @@
 import Link from "next/link";
 import prisma from "../utils/Db";
-import { IPost, ISession } from "../utils/constants";
+import { IComment, ISession } from "../utils/constants";
 import { MdVerified } from "react-icons/md";
 import { BsDot } from "react-icons/bs";
 import { DateTime } from "luxon";
-import Likes from "./Likes";
-import Comments from "./Comments";
-import Retweets from "./Retweets";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../utils/Auth";
-import CreateComment from "./CreateComment";
-import CommentContainer from "./CommentContainer";
+import CreateReply from "./CreateReply";
+import ReplyContainer from "./ReplyContainer";
+import Comments from "./Comments";
+import Retweets from "./Retweets";
+import Likes from "./Likes";
 
 interface props {
-  post: IPost;
+  comment: IComment;
 }
 
-export default async function CustomPost({ post }: props) {
+export default async function CustomComment({ comment }: props) {
   let likesCount = "";
   let retweetsCount = "";
   let commentCount = "";
   const session = await getServerSession(authOptions);
 
-  if (post.likes) {
+  if (comment.likes) {
     likesCount =
-      post.likes.length > 999
-        ? `${post.likes.length}k`
-        : `${post.likes.length}`;
+      comment.likes.length > 999
+        ? `${comment.likes.length}k`
+        : `${comment.likes.length}`;
   }
 
-  if (post.retweets) {
+  if (comment.retweets) {
     retweetsCount =
-      post.retweets.length > 999
-        ? `${post.retweets.length}k`
-        : `${post.retweets.length}`;
+      comment.retweets.length > 999
+        ? `${comment.retweets.length}k`
+        : `${comment.retweets.length}`;
   }
 
-  if (post.comments) {
+  if (comment.replies) {
     commentCount =
-      post.comments.length > 999
-        ? `${post.comments.length}k`
-        : `${post.comments.length}`;
+      comment.replies.length > 999
+        ? `${comment.replies.length}k`
+        : `${comment.replies.length}`;
   }
+
   const authorInformation = await prisma.user.findUnique({
     where: {
-      id: post?.authorId,
+      id: comment?.userId,
     },
   });
 
-  const postDate = DateTime.fromISO(post.createdAt.toISOString());
+  const postDate = DateTime.fromISO(comment.createdAt.toISOString());
 
   const loggedInUser = await prisma.user.findUnique({
     where: {
@@ -82,11 +83,11 @@ export default async function CustomPost({ post }: props) {
         </div>
 
         <div className="flex flex-col items-start gap-2 w-full">
-          <p className="w-full">{post.body}</p>
+          <p className="w-full">{comment.body}</p>
 
-          {post.media.length !== 0 && (
+          {comment.media.length !== 0 && (
             <div className="grid grid-cols-2 gap-4 rounded w-full place-content-between place-items-center">
-              {post.media.map((pic, i) => (
+              {comment.media.map((pic, i) => (
                 <a
                   href={pic}
                   target="_blank"
@@ -112,26 +113,25 @@ export default async function CustomPost({ post }: props) {
               {postDate.monthShort} {postDate.day}, {postDate.year}
             </span>
           </div>
-
           <div className="flex items-center gap-2 justify-between w-full p-2 border-t border-b border-gray-600">
             <Comments count={commentCount} />
-            <Retweets count={retweetsCount} postId={post.id} />
-            <Likes count={likesCount} postId={post.id} />
+            <Retweets count={retweetsCount} commentId={comment.id} />
+            <Likes count={likesCount} commentId={comment.id} />
           </div>
         </div>
       </div>
 
       {loggedInUser && (
-        <CreateComment
+        <CreateReply
           photo={loggedInUser.photo}
-          postId={post.id}
+          commentId={comment.id}
           userId={loggedInUser.id}
         />
       )}
 
       <div className="w-full">
-        {post?.comments?.map((comment) => (
-          <CommentContainer key={comment.id} comment={comment} />
+        {comment?.replies?.map((reply) => (
+          <ReplyContainer key={comment.id} reply={reply} />
         ))}
       </div>
     </div>

@@ -80,12 +80,18 @@ export interface IUser {
   bio: string;
   createdAt: Date;
   email: string;
-  following: number;
-  followers: number;
+  following?: IFollowing[];
+  followers?: IFollowing[];
   headerTitle: string;
   password: string;
   photo: string;
   username: string;
+}
+
+export interface IFollowing {
+  id: string;
+  userId: string;
+  followId: string;
 }
 
 export interface IPost {
@@ -128,6 +134,9 @@ export interface IReply {
   id: string;
   commentId: string;
   userId: string;
+  body: string | null;
+  media: string[];
+  createdAt: Date;
 }
 
 export interface IRetweetPost {

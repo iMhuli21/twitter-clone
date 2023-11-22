@@ -11,7 +11,7 @@ export const ourFileRouter = {
   bannerPicture: f(["image"])
     .middleware(({ req }) => auth(req))
     .onUploadComplete((data) => console.log("file uploaded")),
-  media: f({ image: { maxFileCount: 5 } })
+  media: f({ image: { maxFileCount: 4 } })
     .middleware(({ req }) => auth(req))
     .onUploadComplete((data) => console.log("file uploaded")),
 } satisfies FileRouter;

@@ -35,6 +35,8 @@ export default async function ProfileInfo({ profileUser }: ProfileInfoProps) {
     },
     include: {
       posts: true,
+      followers: true,
+      following: true,
     },
   });
 
@@ -96,11 +98,11 @@ export default async function ProfileInfo({ profileUser }: ProfileInfoProps) {
         </div>
         <div className="flex items-center gap-5">
           <div className="flex items-center gap-1">
-            <h4 className="font-medium">{queriedUser?.following}</h4>
+            <h4 className="font-medium">{queriedUser?.following.length}</h4>
             <span className="text-sm">Following</span>
           </div>
           <div className="flex items-center gap-1">
-            <h4 className="font-medium">{queriedUser?.followers}</h4>
+            <h4 className="font-medium">{queriedUser?.followers.length}</h4>
             <span className="text-sm">Followers</span>
           </div>
         </div>
