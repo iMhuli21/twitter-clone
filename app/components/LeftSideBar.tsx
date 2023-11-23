@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../utils/Auth";
 import prisma from "../utils/Db";
 import PopUpPost from "./PopUpPost";
+import lodash from "lodash";
 
 export default async function LeftSideBar() {
   let user: IUser | null = null;
@@ -15,8 +16,13 @@ export default async function LeftSideBar() {
       where: {
         id: `${(session as ISession).user?.id}`,
       },
+      include: {
+        notifications: true,
+      },
     });
   }
+
+  const activeNotis = lodash.find(user?.notifications, { status: "unseen" });
 
   return (
     <div className="border-r border-gray-600 h-full col-span-1 p-2 flex flex-col items-center">
@@ -33,6 +39,17 @@ export default async function LeftSideBar() {
                   >
                     <route.icon className="text-2xl" />
                     <span className="hidden md:inline">{route.label}</span>
+                  </Link>
+                ) : route.href === "/notifications" ? (
+                  <Link href={route.href} className="flex items-center gap-2">
+                    <route.icon
+                      className={
+                        activeNotis ? "text-2xl text-red-600" : "text-2xl"
+                      }
+                    />
+                    <span className="hidden md:inline truncate">
+                      {route.label}
+                    </span>
                   </Link>
                 ) : (
                   <Link href={route.href} className="flex items-center gap-2">

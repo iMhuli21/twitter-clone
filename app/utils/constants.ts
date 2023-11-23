@@ -3,7 +3,7 @@ import { LuMail } from "react-icons/lu";
 import { BiUser } from "react-icons/bi";
 import { FaGears } from "react-icons/fa6";
 import { ISODateString } from "next-auth";
-import { Prisma } from "@prisma/client";
+import { $Enums, Prisma } from "@prisma/client";
 
 export enum THEME {
   DARK = "DARK",
@@ -83,9 +83,18 @@ export interface IUser {
   following?: IFollowing[];
   followers?: IFollowing[];
   headerTitle: string;
+  notifications?: INotifications[];
   password: string;
   photo: string;
   username: string;
+}
+
+export interface INotifications {
+  id: string;
+  body: string;
+  createdAt: Date;
+  status: $Enums.Status;
+  receiverId: string;
 }
 
 export interface IFollowing {

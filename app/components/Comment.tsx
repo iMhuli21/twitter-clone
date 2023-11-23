@@ -105,8 +105,16 @@ export default function Comment({ comment, author }: props) {
               count={commentCount}
               onClick={() => router.push(`/replies/${comment.id}`)}
             />
-            <Retweets count={retweetsCount} commentId={comment.id} />
-            <Likes count={likesCount} commentId={comment.id} />
+            <Retweets
+              count={retweetsCount}
+              commentId={comment.id}
+              commentAuthor={comment.userId}
+            />
+            <Likes
+              count={likesCount}
+              commentId={comment.id}
+              commentAuthor={comment.userId}
+            />
           </div>
         </div>
       </div>

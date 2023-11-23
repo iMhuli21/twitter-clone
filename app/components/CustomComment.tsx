@@ -115,8 +115,16 @@ export default async function CustomComment({ comment }: props) {
           </div>
           <div className="flex items-center gap-2 justify-between w-full p-2 border-t border-b border-gray-600">
             <Comments count={commentCount} />
-            <Retweets count={retweetsCount} commentId={comment.id} />
-            <Likes count={likesCount} commentId={comment.id} />
+            <Retweets
+              count={retweetsCount}
+              commentId={comment.id}
+              commentAuthor={comment.userId}
+            />
+            <Likes
+              count={likesCount}
+              commentId={comment.id}
+              commentAuthor={comment.userId}
+            />
           </div>
         </div>
       </div>
@@ -126,6 +134,7 @@ export default async function CustomComment({ comment }: props) {
           photo={loggedInUser.photo}
           commentId={comment.id}
           userId={loggedInUser.id}
+          commentor={comment.userId}
         />
       )}
 

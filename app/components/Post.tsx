@@ -108,8 +108,16 @@ export default function Post({ post, author }: PostProps) {
               count={commentCount}
               onClick={() => router.push(`/post/${post.id}`)}
             />
-            <Retweets count={retweetsCount} postId={post.id} />
-            <Likes count={likesCount} postId={post.id} />
+            <Retweets
+              count={retweetsCount}
+              postId={post.id}
+              postAuthor={post.authorId}
+            />
+            <Likes
+              count={likesCount}
+              postId={post.id}
+              postAuthor={post.authorId}
+            />
           </div>
         </div>
       </div>

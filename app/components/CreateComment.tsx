@@ -14,9 +14,15 @@ interface props {
   userId: string | undefined;
   postId: string | undefined;
   photo: string | undefined;
+  authorId: string | undefined;
 }
 
-export default function CreateComment({ userId, postId, photo }: props) {
+export default function CreateComment({
+  userId,
+  postId,
+  photo,
+  authorId,
+}: props) {
   const router = useRouter();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [showEmojiMenu, setShowEmojiMenu] = useState(false);
@@ -33,8 +39,8 @@ export default function CreateComment({ userId, postId, photo }: props) {
     setPending(true);
     const formData = new FormData();
 
-    if (!postId || !userId) {
-      toast.error("No post Id or userId", toastOptions);
+    if (!postId || !userId || !authorId) {
+      toast.error("No post Id or userId or authorId", toastOptions);
       setPending(false);
       return;
     }
@@ -48,7 +54,7 @@ export default function CreateComment({ userId, postId, photo }: props) {
     if (message) {
       formData.set("message", message);
     }
-
+    formData.set("authorId", authorId);
     formData.set("userId", userId);
     formData.set("postId", postId);
 

@@ -115,8 +115,16 @@ export default async function CustomPost({ post }: props) {
 
           <div className="flex items-center gap-2 justify-between w-full p-2 border-t border-b border-gray-600">
             <Comments count={commentCount} />
-            <Retweets count={retweetsCount} postId={post.id} />
-            <Likes count={likesCount} postId={post.id} />
+            <Retweets
+              count={retweetsCount}
+              postId={post.id}
+              postAuthor={post.authorId}
+            />
+            <Likes
+              count={likesCount}
+              postId={post.id}
+              postAuthor={post.authorId}
+            />
           </div>
         </div>
       </div>
@@ -126,6 +134,7 @@ export default async function CustomPost({ post }: props) {
           photo={loggedInUser.photo}
           postId={post.id}
           userId={loggedInUser.id}
+          authorId={post.authorId}
         />
       )}
 

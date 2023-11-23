@@ -11,9 +11,20 @@ export async function POST(req: Request) {
 
     const message = data.get("message") as string;
 
+    const authorId = data.get("authorId") as string;
+
     const pictures = data.getAll("media") as string[];
 
-    if (!userId || !postId) throw new Error("No post id or user id");
+    if (!userId || !postId || !authorId)
+      throw new Error("No postId or userId or authorId");
+
+    const commentor = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!commentor) throw new Error("Commentor does not exist");
 
     if (!message && !pictures) throw new Error("No message");
 
@@ -76,6 +87,23 @@ export async function POST(req: Request) {
       if (!createComment)
         throw new Error("Something went wrong, try again after a few minutes");
     }
+
+    //send notification to the author that someone has commented under their post
+
+    const sendNoti = await prisma.notification.create({
+      data: {
+        body: `${commentor.username} commented on your post:${postId}`,
+        status: "unseen",
+        receiver: {
+          connect: {
+            id: authorId,
+          },
+        },
+      },
+    });
+
+    if (!sendNoti)
+      throw new Error("Something went wrong, try again after a few minutes");
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {

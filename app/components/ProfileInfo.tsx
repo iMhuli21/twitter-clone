@@ -8,6 +8,8 @@ import { DateTime } from "luxon";
 import Tabs from "./Tabs";
 import EditInfo from "./EditInfo";
 import { redirect } from "next/navigation";
+import FollowBtn from "./FollowBtn";
+import lodash from "lodash";
 
 interface ProfileInfoProps {
   profileUser: string;
@@ -25,6 +27,7 @@ export default async function ProfileInfo({ profileUser }: ProfileInfoProps) {
       },
       include: {
         posts: true,
+        following: true,
       },
     });
   }
@@ -45,6 +48,11 @@ export default async function ProfileInfo({ profileUser }: ProfileInfoProps) {
   }
 
   const userDate = queriedUser && DateTime.fromJSDate(queriedUser.createdAt);
+
+  const alreadyFollowing = lodash.find(loggedInUser?.following, {
+    followId: queriedUser.id,
+    userId: loggedInUser?.id,
+  });
 
   return (
     <div className="col-span-5 lg:col-span-3 relative">
@@ -77,9 +85,11 @@ export default async function ProfileInfo({ profileUser }: ProfileInfoProps) {
                 bio={queriedUser?.bio}
               />
             ) : (
-              <button className="btn btn-info text-white rounded-3xl">
-                Follow
-              </button>
+              <FollowBtn
+                followId={queriedUser.id}
+                userId={loggedInUser?.id}
+                alreadyFollowing={alreadyFollowing ? true : false}
+              />
             )}
           </div>
         </div>

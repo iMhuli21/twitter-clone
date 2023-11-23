@@ -14,10 +14,18 @@ import { useRouter } from "next/navigation";
 interface props {
   count: string | undefined;
   postId?: string;
+  postAuthor?: string;
   commentId?: string;
+  commentAuthor?: string;
 }
 
-export default function Likes({ count, postId, commentId }: props) {
+export default function Likes({
+  count,
+  postId,
+  commentId,
+  postAuthor,
+  commentAuthor,
+}: props) {
   const session = useSession();
   const router = useRouter();
 
@@ -30,36 +38,48 @@ export default function Likes({ count, postId, commentId }: props) {
 
     //check if the user is liking a post or comment
     if (postId) {
-      formData.set("postId", postId);
+      if (postAuthor) {
+        formData.set("postId", postId);
+        formData.set("postAuthor", postAuthor);
 
-      const sendReq = await fetch("/api/like", {
-        method: "POST",
-        body: formData,
-      });
+        const sendReq = await fetch("/api/like", {
+          method: "POST",
+          body: formData,
+        });
 
-      const sentRes = await sendReq.json();
+        const sentRes = await sendReq.json();
 
-      if (isCustomError(sentRes)) {
-        toast.error(sentRes.error, toastOptions);
+        if (isCustomError(sentRes)) {
+          toast.error(sentRes.error, toastOptions);
+        } else {
+          toast.success((sentRes as ICustomMessage).success, toastOptions);
+          router.refresh();
+        }
       } else {
-        toast.success((sentRes as ICustomMessage).success, toastOptions);
-        router.refresh();
+        toast.error("No post author provided", toastOptions);
+        return;
       }
     } else if (commentId) {
-      formData.set("commentId", commentId);
+      if (commentAuthor) {
+        formData.set("commentId", commentId);
+        formData.set("commentAuthor", commentAuthor);
 
-      const sendReq = await fetch("/api/like", {
-        method: "POST",
-        body: formData,
-      });
+        const sendReq = await fetch("/api/like", {
+          method: "POST",
+          body: formData,
+        });
 
-      const sentRes = await sendReq.json();
+        const sentRes = await sendReq.json();
 
-      if (isCustomError(sentRes)) {
-        toast.error(sentRes.error, toastOptions);
+        if (isCustomError(sentRes)) {
+          toast.error(sentRes.error, toastOptions);
+        } else {
+          toast.success((sentRes as ICustomMessage).success, toastOptions);
+          router.refresh();
+        }
       } else {
-        toast.success((sentRes as ICustomMessage).success, toastOptions);
-        router.refresh();
+        toast.error("No comment author provided", toastOptions);
+        return;
       }
     }
   };

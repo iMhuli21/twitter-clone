@@ -18,9 +18,15 @@ interface props {
   userId: string | undefined;
   commentId: string | undefined;
   photo: string | undefined;
+  commentor: string | undefined;
 }
 
-export default function CreateReply({ userId, commentId, photo }: props) {
+export default function CreateReply({
+  userId,
+  commentId,
+  photo,
+  commentor,
+}: props) {
   const router = useRouter();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [showEmojiMenu, setShowEmojiMenu] = useState(false);
@@ -37,8 +43,8 @@ export default function CreateReply({ userId, commentId, photo }: props) {
     setPending(true);
     const formData = new FormData();
 
-    if (!commentId || !userId) {
-      toast.error("No comment Id or userId", toastOptions);
+    if (!commentId || !userId || !commentor) {
+      toast.error("No comment Id or userId or commentorId", toastOptions);
       setPending(false);
       return;
     }
@@ -55,6 +61,7 @@ export default function CreateReply({ userId, commentId, photo }: props) {
 
     formData.set("userId", userId);
     formData.set("commentId", commentId);
+    formData.set("commentorId", commentor);
 
     const sendReq = await fetch("/api/reply", {
       method: "POST",

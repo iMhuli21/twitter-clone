@@ -7,6 +7,8 @@ export async function POST(req: Request) {
 
     const commentId = data.get("commentId") as string;
 
+    const commentorId = data.get("commentorId") as string;
+
     const userId = data.get("userId") as string;
 
     const message = data.get("message") as string;
@@ -15,6 +17,14 @@ export async function POST(req: Request) {
 
     if (!userId || !commentId)
       throw new Error("No user id or comment id provided");
+
+    const commentor = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!commentor) throw new Error("Commentor does not exist");
 
     if (!message && !pictures) throw new Error("No message");
 
@@ -68,6 +78,23 @@ export async function POST(req: Request) {
 
       if (!createReply)
         throw new Error("Something went wrong, try again after a few mintues");
+
+      //send notification to the author that someone has commented under their post
+
+      const sendNoti = await prisma.notification.create({
+        data: {
+          body: `${commentor.username} commented on your comment:${commentId}`,
+          status: "unseen",
+          receiver: {
+            connect: {
+              id: commentorId,
+            },
+          },
+        },
+      });
+
+      if (!sendNoti)
+        throw new Error("Something went wrong, try again after a few minutes");
 
       return NextResponse.json({ success: "Sent Reply" }, { status: 200 });
     }
