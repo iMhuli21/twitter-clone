@@ -95,7 +95,7 @@ export default function DeleteBtn({
 
   return (
     <div
-      className="flex items-center justify-center relative"
+      className="hidden sm:flex items-center justify-center relative"
       onClick={() => setShowMenu(!showMenu)}
     >
       <BsThreeDots size={23} />

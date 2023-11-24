@@ -11,6 +11,7 @@ import ReplyContainer from "./ReplyContainer";
 import Comments from "./Comments";
 import Retweets from "./Retweets";
 import Likes from "./Likes";
+import lodash from "lodash";
 
 interface props {
   comment: IComment;
@@ -57,6 +58,14 @@ export default async function CustomComment({ comment }: props) {
     },
   });
 
+  const alreadyRetweeted = lodash.find(comment.retweets, {
+    userId: loggedInUser,
+  });
+  const alreadyLiked = lodash.find(comment.likes, { userId: loggedInUser });
+  const alreadyCommented = lodash.find(comment.replies, {
+    userId: loggedInUser,
+  });
+
   if (!authorInformation) return "User does not exist";
   return (
     <div className="flex flex-col items-start w-full hover:cursor-pointer">
@@ -77,8 +86,8 @@ export default async function CustomComment({ comment }: props) {
             </h1>
           </Link>
 
-          <div className="flex items-center gap-2 text-sm">
-            <span>@{authorInformation.username}</span>
+          <div className="flex items-center gap-2 text-sm truncate">
+            <span className="truncate">@{authorInformation.username}</span>
           </div>
         </div>
 
@@ -114,16 +123,21 @@ export default async function CustomComment({ comment }: props) {
             </span>
           </div>
           <div className="flex items-center gap-2 justify-between w-full p-2 border-t border-b border-gray-600">
-            <Comments count={commentCount} />
+            <Comments
+              count={commentCount}
+              active={alreadyCommented ? true : false}
+            />
             <Retweets
               count={retweetsCount}
               commentId={comment.id}
               commentAuthor={comment.userId}
+              active={alreadyRetweeted ? true : false}
             />
             <Likes
               count={likesCount}
               commentId={comment.id}
               commentAuthor={comment.userId}
+              active={alreadyLiked ? true : false}
             />
           </div>
         </div>

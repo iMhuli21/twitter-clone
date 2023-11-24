@@ -25,7 +25,7 @@ export default async function LeftSideBar() {
   const activeNotis = lodash.find(user?.notifications, { status: "unseen" });
 
   return (
-    <div className="border-r border-gray-600 h-full col-span-1 p-2 flex flex-col items-center">
+    <div className="hidden sm:flex border-r border-gray-600 h-full col-span-1 p-2 flex-col items-center">
       <BsTwitter className="text-3xl text-sky-700" />
       {user && (
         <>

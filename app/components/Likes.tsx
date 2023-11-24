@@ -17,6 +17,7 @@ interface props {
   postAuthor?: string;
   commentId?: string;
   commentAuthor?: string;
+  active: boolean;
 }
 
 export default function Likes({
@@ -25,6 +26,7 @@ export default function Likes({
   commentId,
   postAuthor,
   commentAuthor,
+  active,
 }: props) {
   const session = useSession();
   const router = useRouter();
@@ -86,8 +88,13 @@ export default function Likes({
 
   return (
     <div className="flex items-center gap-2 hover:cursor-pointer hover:text-error transition">
-      <AiOutlineHeart size={20} onClick={likePost} />
-      <span className="text-sm text-gray-600">{count}</span>
+      <AiOutlineHeart
+        size={20}
+        onClick={likePost}
+        className={active ? "text-error" : "text-gray-300"}
+      />
+
+      <span className={active ? "text-error" : "text-gray-600"}>{count}</span>
     </div>
   );
 }

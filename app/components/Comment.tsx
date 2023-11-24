@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { IComment, IUser, formatTimeAgo } from "../utils/constants";
+import { IComment, ISession, IUser, formatTimeAgo } from "../utils/constants";
 import Link from "next/link";
 import { MdVerified } from "react-icons/md";
 import { BsDot } from "react-icons/bs";
@@ -9,6 +9,8 @@ import Comments from "./Comments";
 import Retweets from "./Retweets";
 import Likes from "./Likes";
 import DeleteBtn from "./DeleteBtn";
+import { useSession } from "next-auth/react";
+import lodash from "lodash";
 
 interface props {
   comment: IComment;
@@ -19,7 +21,10 @@ export default function Comment({ comment, author }: props) {
   let likesCount = "";
   let retweetsCount = "";
   let commentCount = "";
+
   const router = useRouter();
+  const session = useSession();
+  const loggedInUser = (session.data as ISession).user?.id as string;
 
   if (comment.likes) {
     likesCount =
@@ -42,8 +47,19 @@ export default function Comment({ comment, author }: props) {
         : `${comment.replies.length}`;
   }
 
+  const alreadyRetweeted = lodash.find(comment.retweets, {
+    userId: loggedInUser,
+  });
+  const alreadyLiked = lodash.find(comment.likes, { userId: loggedInUser });
+  const alreadyCommented = lodash.find(comment.replies, {
+    userId: loggedInUser,
+  });
+
   return (
-    <div className="flex items-start gap-3 py-2 px-4 sm:px-6 border-b border-gray-600 w-full hover:cursor-pointer hover:bg-neutral transition">
+    <div
+      className="flex items-start gap-3 py-2 px-4 sm:px-6 border-b border-gray-600 w-full hover:cursor-pointer hover:bg-neutral transition"
+      onDoubleClick={() => router.push(`/replies/${comment.id}`)}
+    >
       <img
         src={author.photo}
         alt="user profile"
@@ -51,8 +67,8 @@ export default function Comment({ comment, author }: props) {
         className="object-cover object-center w-12 h-12 rounded-full"
       />
       <div className="w-full flex flex-col items-start gap-2">
-        <div className="flex items-center gap-2 w-full justify-between">
-          <div className="flex items-center gap-2 w-full">
+        <div className="flex items-start sm:gap-2 w-full justify-between">
+          <div className="flex flex-col sm:flex-row items-start gap-2 w-full">
             <Link href={`/profile/${author.username}`}>
               <h1 className="flex items-center gap-1">
                 <span className="font-medium hover:border-b border-gray-500 transition">
@@ -76,10 +92,7 @@ export default function Comment({ comment, author }: props) {
           <DeleteBtn authorId={comment.userId} commentId={comment.id} />
         </div>
 
-        <div
-          className="flex flex-col items-start gap-2 w-full"
-          onDoubleClick={() => router.push(`/replies/${comment.id}`)}
-        >
+        <div className="flex flex-col items-start gap-2 w-full">
           <p className="w-full">{comment.body}</p>
 
           {comment.media.length !== 0 && (
@@ -107,16 +120,19 @@ export default function Comment({ comment, author }: props) {
             <Comments
               count={commentCount}
               onClick={() => router.push(`/replies/${comment.id}`)}
+              active={alreadyCommented ? true : false}
             />
             <Retweets
               count={retweetsCount}
               commentId={comment.id}
               commentAuthor={comment.userId}
+              active={alreadyRetweeted ? true : false}
             />
             <Likes
               count={likesCount}
               commentId={comment.id}
               commentAuthor={comment.userId}
+              active={alreadyLiked ? true : false}
             />
           </div>
         </div>

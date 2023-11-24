@@ -1,7 +1,7 @@
 "use client";
 
 import { MdVerified } from "react-icons/md";
-import { IPost, IUser, formatTimeAgo } from "../utils/constants";
+import { IPost, ISession, IUser, formatTimeAgo } from "../utils/constants";
 import { BsDot } from "react-icons/bs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -9,6 +9,8 @@ import Likes from "./Likes";
 import Retweets from "./Retweets";
 import Comments from "./Comments";
 import DeleteBtn from "./DeleteBtn";
+import lodash from "lodash";
+import { useSession } from "next-auth/react";
 
 interface PostProps {
   post: IPost;
@@ -19,7 +21,9 @@ export default function Post({ post, author }: PostProps) {
   let likesCount = "";
   let retweetsCount = "";
   let commentCount = "";
+  const session = useSession();
   const router = useRouter();
+  const loggedInUser = (session.data as ISession).user?.id as string;
 
   if (post.likes) {
     likesCount =
@@ -42,6 +46,10 @@ export default function Post({ post, author }: PostProps) {
         : `${post.comments.length}`;
   }
 
+  const alreadyRetweeted = lodash.find(post.retweets, { userId: loggedInUser });
+  const alreadyLiked = lodash.find(post.likes, { userId: loggedInUser });
+  const alreadyCommented = lodash.find(post.comments, { userId: loggedInUser });
+
   return (
     <div
       className="flex items-start gap-3 py-2 px-4 sm:px-6 border-b border-gray-600 w-full hover:cursor-pointer hover:bg-neutral transition"
@@ -54,8 +62,8 @@ export default function Post({ post, author }: PostProps) {
         className="object-cover object-center w-12 h-12 rounded-full"
       />
       <div className="w-full flex flex-col items-start gap-2">
-        <div className="flex items-center gap-2 w-full justify-between">
-          <div className="flex items-center gap-2 w-full">
+        <div className="flex items-start sm:gap-2 w-full justify-between">
+          <div className="flex flex-col sm:flex-row items-start gap-2 w-full">
             <Link href={`/profile/${author.username}`}>
               <h1 className="flex items-center gap-1">
                 <span className="font-medium hover:border-b border-gray-500 transition">
@@ -65,8 +73,8 @@ export default function Post({ post, author }: PostProps) {
               </h1>
             </Link>
 
-            <div className="flex items-center gap-2 text-sm">
-              <span>@{author.username}</span>
+            <div className="flex items-center gap-2 text-sm truncate">
+              <span className="truncate">@{author.username}</span>
               <div className="flex items-center">
                 <BsDot />
                 <span className="hidden sm:block">
@@ -107,16 +115,19 @@ export default function Post({ post, author }: PostProps) {
             <Comments
               count={commentCount}
               onClick={() => router.push(`/post/${post.id}`)}
+              active={alreadyCommented ? true : false}
             />
             <Retweets
               count={retweetsCount}
               postId={post.id}
               postAuthor={post.authorId}
+              active={alreadyRetweeted ? true : false}
             />
             <Likes
               count={likesCount}
               postId={post.id}
               postAuthor={post.authorId}
+              active={alreadyLiked ? true : false}
             />
           </div>
         </div>

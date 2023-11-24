@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import BackBtn from "./BackBtn";
 import { authOptions } from "../utils/Auth";
 import prisma from "../utils/Db";
-import { ISession, IUser } from "../utils/constants";
+import { ISession, IUser, items } from "../utils/constants";
 import { BsCalendar3 } from "react-icons/bs";
 import { DateTime } from "luxon";
 import Tabs from "./Tabs";
@@ -10,12 +10,21 @@ import EditInfo from "./EditInfo";
 import { redirect } from "next/navigation";
 import FollowBtn from "./FollowBtn";
 import lodash from "lodash";
+import PostTab from "./PostTab";
+import RepliesTab from "./RepliesTab";
+import RetweetsTab from "./RetweetsTab";
+import LikesTab from "./LikesTab";
+import CommentsTab from "./CommentsTab";
 
 interface ProfileInfoProps {
   profileUser: string;
+  active: string | null;
 }
 
-export default async function ProfileInfo({ profileUser }: ProfileInfoProps) {
+export default async function ProfileInfo({
+  profileUser,
+  active,
+}: ProfileInfoProps) {
   let loggedInUser: IUser | null = null;
 
   const session = await getServerSession(authOptions);
@@ -55,7 +64,7 @@ export default async function ProfileInfo({ profileUser }: ProfileInfoProps) {
   });
 
   return (
-    <div className="col-span-5 lg:col-span-3 relative">
+    <div className="col-span-6 sm:col-span-5 lg:col-span-3 relative">
       <div className="flex items-center border-b p-2 gap-5 border-gray-500">
         <BackBtn />
         <div className="flex flex-col items-start ">
@@ -117,7 +126,19 @@ export default async function ProfileInfo({ profileUser }: ProfileInfoProps) {
           </div>
         </div>
       </div>
-      <Tabs />
+      <Tabs user={queriedUser} />
+
+      {active === items[0] || !active ? (
+        <PostTab user={queriedUser.id} />
+      ) : active === items[1] ? (
+        <RepliesTab user={queriedUser.id} />
+      ) : active === items[2] ? (
+        <RetweetsTab user={queriedUser.id} />
+      ) : active === items[3] ? (
+        <LikesTab user={queriedUser.id} />
+      ) : (
+        active === items[4] && <CommentsTab user={queriedUser.id} />
+      )}
     </div>
   );
 }

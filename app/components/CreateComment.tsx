@@ -2,7 +2,7 @@
 
 import { GoFileMedia } from "react-icons/go";
 import { BsEmojiLaughing } from "react-icons/bs";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import EmojiPicker, { Theme, EmojiClickData } from "emoji-picker-react";
 import { UploadFileResponse } from "uploadthing/client";
 import { UploadButton } from "../utils/uploadthing";
@@ -141,10 +141,11 @@ export default function CreateComment({
               onClick={() => setShowEmojiMenu(!showEmojiMenu)}
             />
             {showEmojiMenu && (
-              <div className="absolute -left-20 top-14 sm:left-2 z-50">
+              <div className="absolute -left-16 top-14 sm:left-2 z-50">
                 <EmojiPicker
                   theme={Theme.DARK}
                   onEmojiClick={addEmojiToMessage}
+                  width={289}
                 />
               </div>
             )}

@@ -199,3 +199,5 @@ export function formatTimeAgo(date: Date) {
     duration /= division.amount;
   }
 }
+
+export const items = ["Posts", "Replies", "Retweets", "Likes", "Comments"];

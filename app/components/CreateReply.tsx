@@ -146,10 +146,11 @@ export default function CreateReply({
               onClick={() => setShowEmojiMenu(!showEmojiMenu)}
             />
             {showEmojiMenu && (
-              <div className="absolute -left-20 top-14 sm:left-2 z-50">
+              <div className="absolute -left-16 top-14 sm:left-2 z-50">
                 <EmojiPicker
                   theme={Theme.DARK}
                   onEmojiClick={addEmojiToMessage}
+                  width={289}
                 />
               </div>
             )}

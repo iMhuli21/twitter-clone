@@ -24,8 +24,8 @@ export default function Reply({ reply, author }: props) {
         className="object-cover object-center w-12 h-12 rounded-full"
       />
       <div className="w-full flex flex-col items-start gap-2">
-        <div className="flex items-center gap-2 w-full justify-between">
-          <div className="flex items-center gap-2 w-full">
+        <div className="flex items-start gap-2 w-full justify-between">
+          <div className="flex flex-col sm:flex-row items-start gap-2 w-full">
             <Link href={`/profile/${author.username}`}>
               <h1 className="flex items-center gap-1">
                 <span className="font-medium hover:border-b border-gray-500 transition">

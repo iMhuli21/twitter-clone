@@ -26,7 +26,7 @@ export default async function Replies({ params }: props) {
   return (
     <main className="page">
       <LeftSideBar />
-      <div className="col-span-5 lg:col-span-3">
+      <div className="col-span-6 sm:col-span-5 lg:col-span-3">
         <div className="py-5 border-b border-gray-600 flex items-center w-full px-2">
           <BackBtn />
           <h1 className="text-center font-extrabold text-lg w-full">Replies</h1>

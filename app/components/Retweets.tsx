@@ -17,6 +17,7 @@ interface props {
   postAuthor?: string;
   commentId?: string;
   commentAuthor?: string;
+  active: boolean;
 }
 
 export default function Retweets({
@@ -25,6 +26,7 @@ export default function Retweets({
   commentId,
   commentAuthor,
   postAuthor,
+  active,
 }: props) {
   const session = useSession();
   const router = useRouter();
@@ -86,8 +88,16 @@ export default function Retweets({
   };
   return (
     <div className="flex items-center gap-2 hover:cursor-pointer hover:text-success transition">
-      <AiOutlineRetweet size={20} onClick={retweetPost} />
-      <span className="text-sm text-gray-600">{count}</span>
+      <AiOutlineRetweet
+        size={20}
+        onClick={retweetPost}
+        className={active ? "text-green-600" : "text-gray-300"}
+      />
+      <span
+        className={active ? "text-sm text-green-600" : "text-sm text-gray-600"}
+      >
+        {count}
+      </span>
     </div>
   );
 }

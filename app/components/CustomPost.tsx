@@ -11,6 +11,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../utils/Auth";
 import CreateComment from "./CreateComment";
 import CommentContainer from "./CommentContainer";
+import lodash from "lodash";
 
 interface props {
   post: IPost;
@@ -56,6 +57,14 @@ export default async function CustomPost({ post }: props) {
     },
   });
 
+  const alreadyRetweeted = lodash.find(post.retweets, {
+    userId: loggedInUser,
+  });
+  const alreadyLiked = lodash.find(post.likes, { userId: loggedInUser });
+  const alreadyCommented = lodash.find(post.comments, {
+    userId: loggedInUser,
+  });
+
   if (!authorInformation) return "User does not exist";
   return (
     <div className="flex flex-col items-start w-full hover:cursor-pointer">
@@ -76,8 +85,8 @@ export default async function CustomPost({ post }: props) {
             </h1>
           </Link>
 
-          <div className="flex items-center gap-2 text-sm">
-            <span>@{authorInformation.username}</span>
+          <div className="flex items-center gap-2 text-sm truncate">
+            <span className="truncate">@{authorInformation.username}</span>
           </div>
         </div>
 
@@ -114,16 +123,21 @@ export default async function CustomPost({ post }: props) {
           </div>
 
           <div className="flex items-center gap-2 justify-between w-full p-2 border-t border-b border-gray-600">
-            <Comments count={commentCount} />
+            <Comments
+              count={commentCount}
+              active={alreadyCommented ? true : false}
+            />
             <Retweets
               count={retweetsCount}
               postId={post.id}
               postAuthor={post.authorId}
+              active={alreadyRetweeted ? true : false}
             />
             <Likes
               count={likesCount}
               postId={post.id}
               postAuthor={post.authorId}
+              active={alreadyLiked ? true : false}
             />
           </div>
         </div>

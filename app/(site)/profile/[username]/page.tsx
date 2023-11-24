@@ -11,13 +11,16 @@ interface ProfileProps {
   params: {
     username: string;
   };
+  searchParams: {
+    view: string | null;
+  };
 }
 
-export default async function Profile({ params }: ProfileProps) {
+export default async function Profile({ params, searchParams }: ProfileProps) {
   return (
     <main className="page">
       <LeftSideBar />
-      <ProfileInfo profileUser={params.username} />
+      <ProfileInfo profileUser={params.username} active={searchParams.view} />
       <RightSideBar />
     </main>
   );

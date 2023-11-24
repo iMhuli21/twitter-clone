@@ -1,6 +1,5 @@
 import prisma from "../utils/Db";
-import { IComment, IReply } from "../utils/constants";
-import Comment from "./Comment";
+import { IReply } from "../utils/constants";
 import Reply from "./Reply";
 
 interface props {

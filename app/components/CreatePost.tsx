@@ -72,7 +72,7 @@ export default function CreatePost({ id, photo }: CreatePostProps) {
     inputRef.current?.focus();
   }, []);
   return (
-    <div className="flex flex-col items-start justify-center w-full py-2 px-5 border-b border-gray-600 hover:cursor-pointer">
+    <div className="flex flex-col items-start justify-center w-full py-2 px-4 border-b border-gray-600 hover:cursor-pointer">
       <div className="flex items-center gap-2 w-full justify-center">
         <img
           alt="user profile"
@@ -144,10 +144,11 @@ export default function CreatePost({ id, photo }: CreatePostProps) {
               onClick={() => setShowEmojiMenu(!showEmojiMenu)}
             />
             {showEmojiMenu && (
-              <div className="absolute -left-20 top-14 sm:left-2 z-50">
+              <div className="absolute -left-16 top-14 sm:left-2 z-50">
                 <EmojiPicker
                   theme={Theme.DARK}
                   onEmojiClick={addEmojiToMessage}
+                  width={289}
                 />
               </div>
             )}
