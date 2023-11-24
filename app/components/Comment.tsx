@@ -76,7 +76,10 @@ export default function Comment({ comment, author }: props) {
           <DeleteBtn authorId={comment.userId} commentId={comment.id} />
         </div>
 
-        <div className="flex flex-col items-start gap-2 w-full">
+        <div
+          className="flex flex-col items-start gap-2 w-full"
+          onDoubleClick={() => router.push(`/replies/${comment.id}`)}
+        >
           <p className="w-full">{comment.body}</p>
 
           {comment.media.length !== 0 && (

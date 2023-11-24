@@ -8,7 +8,7 @@ import {
 } from "../utils/constants";
 import { BsThreeDots } from "react-icons/bs";
 import { useState } from "react";
-import { FaTrash } from "react-icons/fa6";
+import { MdMarkChatRead } from "react-icons/md";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
@@ -20,6 +20,8 @@ export default function NotificationCard({ noti }: props) {
   const router = useRouter();
   const splitString = noti.body.split(":");
   const [showMenu, setShowMenu] = useState(false);
+
+  const routeFinder = splitString[0].endsWith("post");
 
   const handleClick = async () => {
     const sendReq = await fetch(`/api/notification?id=${noti.id}`, {
@@ -36,14 +38,24 @@ export default function NotificationCard({ noti }: props) {
       router.refresh();
     }
   };
+
+  const handleDblClick = () => {
+    //if true then someone liked their post so we will redirect them to the exact post
+    if (routeFinder) {
+      router.push(`/post/${splitString[1]}`);
+    } else {
+      router.push(`/replies/${splitString[1]}`);
+    }
+  };
   return (
     <div
       className={
         noti.status === "seen"
-          ? "flex items-center relative gap-2 w-full py-6 px-2 border-b border-gray-600 justify-between"
-          : "flex items-center relative gap-2 w-full py-6 px-2 border-b border-gray-600 justify-between bg-neutral"
+          ? "flex items-center relative gap-2 w-full py-6 px-2 border-b border-gray-600 justify-between hover:cursor-pointer"
+          : "flex items-center relative gap-2 w-full py-6 px-2 border-b border-gray-600 justify-between bg-neutral hover:cursor-pointer"
       }
       key={noti.id}
+      onDoubleClick={handleDblClick}
     >
       <div className="flex items-center gap-2">
         <PiBellSimpleRingingFill size={25} className="text-gray-300" />
@@ -59,7 +71,7 @@ export default function NotificationCard({ noti }: props) {
         <ul className="menu bg-base-200 w-56 rounded-box absolute z-50 top-12 right-0">
           <li onClick={handleClick}>
             <a>
-              <FaTrash size={15} />
+              <MdMarkChatRead size={20} />
               Mark as read
             </a>
           </li>

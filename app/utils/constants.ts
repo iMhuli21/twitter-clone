@@ -36,11 +36,6 @@ export const routes = [
     href: "/notifications",
   },
   {
-    icon: LuMail,
-    label: "Messages",
-    href: "/messages",
-  },
-  {
     icon: BiUser,
     label: "Profile",
     href: "/profile",

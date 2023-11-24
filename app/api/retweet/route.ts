@@ -64,22 +64,41 @@ export async function POST(req: Request) {
             );
 
           //send out notification to the post author that someone has retweeted their post
-          const sendNoti = await prisma.notification.create({
-            data: {
-              body: `${user.username} retweeted your post:${postId}`,
-              status: "unseen",
-              receiver: {
-                connect: {
-                  id: postAuthor,
+          if (user.id === postAuthor) {
+            const sendNoti = await prisma.notification.create({
+              data: {
+                body: `You retweeted your post:${postId}`,
+                status: "unseen",
+                receiver: {
+                  connect: {
+                    id: postAuthor,
+                  },
                 },
               },
-            },
-          });
+            });
 
-          if (!sendNoti)
-            throw new Error(
-              "Something went wrong, try again after a few minutes"
-            );
+            if (!sendNoti)
+              throw new Error(
+                "Something went wrong, try again after a few minutes"
+              );
+          } else {
+            const sendNoti = await prisma.notification.create({
+              data: {
+                body: `${user.username} retweeted your post:${postId}`,
+                status: "unseen",
+                receiver: {
+                  connect: {
+                    id: postAuthor,
+                  },
+                },
+              },
+            });
+
+            if (!sendNoti)
+              throw new Error(
+                "Something went wrong, try again after a few minutes"
+              );
+          }
 
           return NextResponse.json(
             { success: "Retweeted Post" },
@@ -146,22 +165,41 @@ export async function POST(req: Request) {
             );
 
           //send out notification to the comment author that someone has retweeted their comment
-          const sendNoti = await prisma.notification.create({
-            data: {
-              body: `${user.username} retweeted your comment:${commentId}`,
-              status: "unseen",
-              receiver: {
-                connect: {
-                  id: commentAuthor,
+          if (user.id === commentAuthor) {
+            const sendNoti = await prisma.notification.create({
+              data: {
+                body: `You retweeted your comment:${commentId}`,
+                status: "unseen",
+                receiver: {
+                  connect: {
+                    id: commentAuthor,
+                  },
                 },
               },
-            },
-          });
+            });
 
-          if (!sendNoti)
-            throw new Error(
-              "Something went wrong, try again after a few minutes"
-            );
+            if (!sendNoti)
+              throw new Error(
+                "Something went wrong, try again after a few minutes"
+              );
+          } else {
+            const sendNoti = await prisma.notification.create({
+              data: {
+                body: `${user.username} retweeted your comment:${commentId}`,
+                status: "unseen",
+                receiver: {
+                  connect: {
+                    id: commentAuthor,
+                  },
+                },
+              },
+            });
+
+            if (!sendNoti)
+              throw new Error(
+                "Something went wrong, try again after a few minutes"
+              );
+          }
 
           return NextResponse.json(
             { success: "Retweeted Comment" },

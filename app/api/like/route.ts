@@ -62,22 +62,41 @@ export async function POST(req: Request) {
             );
 
           //send notification to the author of the post the someone has like their post
-          const sendNoti = await prisma.notification.create({
-            data: {
-              body: `${user.username} like your post:${postId}`,
-              status: "unseen",
-              receiver: {
-                connect: {
-                  id: postAuthor,
+          if (user.id === postAuthor) {
+            const sendNoti = await prisma.notification.create({
+              data: {
+                body: `You liked your post:${postId}`,
+                status: "unseen",
+                receiver: {
+                  connect: {
+                    id: postAuthor,
+                  },
                 },
               },
-            },
-          });
+            });
 
-          if (!sendNoti)
-            throw new Error(
-              "Something went wrong, try again after a few minutes"
-            );
+            if (!sendNoti)
+              throw new Error(
+                "Something went wrong, try again after a few minutes"
+              );
+          } else {
+            const sendNoti = await prisma.notification.create({
+              data: {
+                body: `${user.username} liked your post:${postId}`,
+                status: "unseen",
+                receiver: {
+                  connect: {
+                    id: postAuthor,
+                  },
+                },
+              },
+            });
+
+            if (!sendNoti)
+              throw new Error(
+                "Something went wrong, try again after a few minutes"
+              );
+          }
 
           return NextResponse.json({ success: "Liked Post" }, { status: 200 });
         } else {
@@ -140,22 +159,41 @@ export async function POST(req: Request) {
             );
 
           //send out notification to the commment author that someone has liked their comment
-          const sendNoti = await prisma.notification.create({
-            data: {
-              body: `${user.username} like your comment:${commentId}`,
-              status: "unseen",
-              receiver: {
-                connect: {
-                  id: commentAuthor,
+          if (user.id === commentAuthor) {
+            const sendNoti = await prisma.notification.create({
+              data: {
+                body: `You liked your comment:${commentId}`,
+                status: "unseen",
+                receiver: {
+                  connect: {
+                    id: commentAuthor,
+                  },
                 },
               },
-            },
-          });
+            });
 
-          if (!sendNoti)
-            throw new Error(
-              "Something went wrong, try again after a few minutes"
-            );
+            if (!sendNoti)
+              throw new Error(
+                "Something went wrong, try again after a few minutes"
+              );
+          } else {
+            const sendNoti = await prisma.notification.create({
+              data: {
+                body: `${user.username} liked your comment:${commentId}`,
+                status: "unseen",
+                receiver: {
+                  connect: {
+                    id: commentAuthor,
+                  },
+                },
+              },
+            });
+
+            if (!sendNoti)
+              throw new Error(
+                "Something went wrong, try again after a few minutes"
+              );
+          }
 
           return NextResponse.json(
             { success: "Liked Comment" },

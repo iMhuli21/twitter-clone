@@ -82,7 +82,7 @@ export default function LandingSignIn() {
                 type="email"
                 name="sign_in_email"
                 id="sign_in_email"
-                className="input input-bordered max-w-sm w-full"
+                className="input input-bordered max-w-sm w-full autofill:text-gray-500"
               />
             </div>
             <div className="form-control w-full max-w-sm">
@@ -96,7 +96,7 @@ export default function LandingSignIn() {
                   type={passwordType}
                   name="sign_in_password"
                   id="sign_in_password"
-                  className="p-2 w-full bg-inherit autofill:bg-red-900"
+                  className="p-2 w-full bg-inherit autofill:text-gray-500"
                 />
                 <div className="flex items-center justify-center p-2 hover:cursor-pointer">
                   <FaEye onClick={changePasswordType} />

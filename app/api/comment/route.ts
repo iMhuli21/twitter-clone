@@ -90,20 +90,37 @@ export async function POST(req: Request) {
 
     //send notification to the author that someone has commented under their post
 
-    const sendNoti = await prisma.notification.create({
-      data: {
-        body: `${commentor.username} commented on your post:${postId}`,
-        status: "unseen",
-        receiver: {
-          connect: {
-            id: authorId,
+    if (commentor.id === authorId) {
+      const sendNoti = await prisma.notification.create({
+        data: {
+          body: `You commented on your post:${postId}`,
+          status: "unseen",
+          receiver: {
+            connect: {
+              id: authorId,
+            },
           },
         },
-      },
-    });
+      });
 
-    if (!sendNoti)
-      throw new Error("Something went wrong, try again after a few minutes");
+      if (!sendNoti)
+        throw new Error("Something went wrong, try again after a few minutes");
+    } else {
+      const sendNoti = await prisma.notification.create({
+        data: {
+          body: `${commentor.username} commented on your post:${postId}`,
+          status: "unseen",
+          receiver: {
+            connect: {
+              id: authorId,
+            },
+          },
+        },
+      });
+
+      if (!sendNoti)
+        throw new Error("Something went wrong, try again after a few minutes");
+    }
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
