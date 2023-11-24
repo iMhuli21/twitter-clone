@@ -93,7 +93,7 @@ export default function CreatePost({ id, photo }: CreatePostProps) {
       {media?.length !== 0 && (
         <div className="grid grid-cols-2 gap-4 rounded w-full place-content-between place-items-center">
           {media?.map((pic, i) => (
-            <div className="relative flex basis-auto">
+            <div className="relative flex basis-auto" key={i}>
               <img
                 key={i}
                 src={pic.url}
