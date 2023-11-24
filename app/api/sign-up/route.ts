@@ -43,9 +43,9 @@ export async function POST(req: Request) {
     //hash password
     const hashedPassword = await hash(body.password, 10);
 
-    const image = "http://localhost:3000/default/default_profile_picture.jpg";
+    const image = `${process.env.NEXTAUTH_URL}/default/default_profile_picture.jpg`;
 
-    const bannerImage = "http://localhost:3000/default/default_banner.jpg";
+    const bannerImage = `${process.env.NEXTAUTH_URL}/default/default_banner.jpg`;
 
     const createAccount = await prisma.user.create({
       data: {
