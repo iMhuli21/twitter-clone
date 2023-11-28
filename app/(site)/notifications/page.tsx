@@ -20,7 +20,11 @@ export default async function NotificationsPage() {
         id: (session as ISession).user?.id as string,
       },
       include: {
-        notifications: true,
+        notifications: {
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
       },
     });
   }

@@ -59,7 +59,7 @@ export default function NotificationCard({ noti }: props) {
     >
       <div className="flex items-center gap-2">
         <PiBellSimpleRingingFill size={25} className="text-gray-300" />
-        <span className="font-pt">@{splitString[0]}</span>
+        <span className="font-pt">{splitString[0]}</span>
       </div>
       <BsThreeDots
         size={23}

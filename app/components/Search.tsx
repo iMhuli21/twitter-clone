@@ -48,7 +48,7 @@ export default function Search() {
         </form>
       </div>
 
-      {data.length !== 0 && (
+      {data.length !== 0 && search.length !== 0 && (
         <div className="w-full bg-base-200 py-6 px-5 rounded-xl mt-5 flex flex-col items-start gap-3">
           {data.map((acc) => (
             <div

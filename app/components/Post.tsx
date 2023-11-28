@@ -1,7 +1,15 @@
 "use client";
 
 import { MdVerified } from "react-icons/md";
-import { IPost, ISession, IUser, formatTimeAgo } from "../utils/constants";
+import {
+  IComment,
+  ILikePost,
+  IPost,
+  IRetweetPost,
+  ISession,
+  IUser,
+  formatTimeAgo,
+} from "../utils/constants";
 import { BsDot } from "react-icons/bs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -21,9 +29,12 @@ export default function Post({ post, author }: PostProps) {
   let likesCount = "";
   let retweetsCount = "";
   let commentCount = "";
+  let alreadyRetweeted: IRetweetPost | undefined;
+  let alreadyLiked: ILikePost | undefined;
+  let alreadyCommented: IComment | undefined;
   const session = useSession();
   const router = useRouter();
-  const loggedInUser = (session.data as ISession).user?.id as string;
+  const loggedInUser = (session?.data as ISession)?.user?.id as string;
 
   if (post.likes) {
     likesCount =
@@ -46,9 +57,11 @@ export default function Post({ post, author }: PostProps) {
         : `${post.comments.length}`;
   }
 
-  const alreadyRetweeted = lodash.find(post.retweets, { userId: loggedInUser });
-  const alreadyLiked = lodash.find(post.likes, { userId: loggedInUser });
-  const alreadyCommented = lodash.find(post.comments, { userId: loggedInUser });
+  if (loggedInUser) {
+    alreadyRetweeted = lodash.find(post.retweets, { userId: loggedInUser });
+    alreadyLiked = lodash.find(post.likes, { userId: loggedInUser });
+    alreadyCommented = lodash.find(post.comments, { userId: loggedInUser });
+  }
 
   return (
     <div
@@ -111,25 +124,27 @@ export default function Post({ post, author }: PostProps) {
             </div>
           )}
 
-          <div className="flex items-center gap-2 justify-between w-full p-2">
-            <Comments
-              count={commentCount}
-              onClick={() => router.push(`/post/${post.id}`)}
-              active={alreadyCommented ? true : false}
-            />
-            <Retweets
-              count={retweetsCount}
-              postId={post.id}
-              postAuthor={post.authorId}
-              active={alreadyRetweeted ? true : false}
-            />
-            <Likes
-              count={likesCount}
-              postId={post.id}
-              postAuthor={post.authorId}
-              active={alreadyLiked ? true : false}
-            />
-          </div>
+          {loggedInUser && (
+            <div className="flex items-center gap-2 justify-between w-full p-2">
+              <Comments
+                count={commentCount}
+                onClick={() => router.push(`/post/${post.id}`)}
+                active={alreadyCommented ? true : false}
+              />
+              <Retweets
+                count={retweetsCount}
+                postId={post.id}
+                postAuthor={post.authorId}
+                active={alreadyRetweeted ? true : false}
+              />
+              <Likes
+                count={likesCount}
+                postId={post.id}
+                postAuthor={post.authorId}
+                active={alreadyLiked ? true : false}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

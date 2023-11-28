@@ -5,7 +5,7 @@ import prisma from "../utils/Db";
 import { ISession, IUser, items } from "../utils/constants";
 import { BsCalendar3 } from "react-icons/bs";
 import { DateTime } from "luxon";
-import Tabs from "./Tabs";
+import Tabs from "./ProfileTabs";
 import EditInfo from "./EditInfo";
 import { redirect } from "next/navigation";
 import FollowBtn from "./FollowBtn";
@@ -15,6 +15,7 @@ import RepliesTab from "./RepliesTab";
 import RetweetsTab from "./RetweetsTab";
 import LikesTab from "./LikesTab";
 import CommentsTab from "./CommentsTab";
+import FollowInfo from "./FollowInfo";
 
 interface ProfileInfoProps {
   profileUser: string;
@@ -115,16 +116,10 @@ export default async function ProfileInfo({
             Joined {`${userDate?.monthLong}, ${userDate?.year}`}
           </span>
         </div>
-        <div className="flex items-center gap-5">
-          <div className="flex items-center gap-1">
-            <h4 className="font-medium">{queriedUser?.following.length}</h4>
-            <span className="text-sm">Following</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <h4 className="font-medium">{queriedUser?.followers.length}</h4>
-            <span className="text-sm">Followers</span>
-          </div>
-        </div>
+        <FollowInfo
+          followers={queriedUser.followers.length}
+          following={queriedUser.following.length}
+        />
       </div>
       <Tabs user={queriedUser} />
 

@@ -11,6 +11,14 @@ export async function POST(req: Request) {
 
     if (!followId || !userId) throw new Error("No userId or followId provided");
 
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) throw new Error("User does not exist");
+
     //we check if the person is already following them
     const alreadyFollowing = await prisma.following.findFirst({
       where: {
@@ -43,7 +51,19 @@ export async function POST(req: Request) {
         },
       });
 
-      if (!follow || !follower)
+      const sendNoti = await prisma.notification.create({
+        data: {
+          body: `${user.username} has started to follow you`,
+          status: "unseen",
+          receiver: {
+            connect: {
+              id: followId,
+            },
+          },
+        },
+      });
+
+      if (!follow || !follower || !sendNoti)
         throw new Error("Something went wrong, try again after a few minutes");
       return NextResponse.json(
         { success: "Started following" },
