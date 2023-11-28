@@ -103,8 +103,8 @@ export default function LandingSignIn() {
                 </div>
               </div>
               <span className="label-text-alt mt-1">
-                *Password must have atleast one uppercase, lowercase, symbol and
-                must be minimum of 8 characters.
+                *Password must have atleast one uppercase, lowercase, number,
+                symbol and must be minimum of 8 characters.
               </span>
             </div>
 
